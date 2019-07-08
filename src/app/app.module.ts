@@ -26,6 +26,7 @@ import { FeedComponent } from './feed/feed.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
 import { UserItemComponent } from './user-item/user-item.component';
+import { ChatroomComponent } from './chatroom/chatroom.component';
 
 
 
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
     LoginFormComponent,
     SignupFormComponent,
     UserItemComponent,
+    ChatroomComponent,
 
   ],
   imports: [
