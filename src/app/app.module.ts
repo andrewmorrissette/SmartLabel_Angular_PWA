@@ -19,14 +19,14 @@ import {AuthenticationService} from './services/authentication.service';
 import {ExhibitService} from './services/exhibit.service';
 import { environment } from 'src/environments/environment';
 import { SafeURLPipe } from './pipes/safe-url.pipe';
-import { ChatroomListComponent } from './chatroom-list/chatroom-list.component';
-import { MessageComponent } from './message/message.component';
-import { ChatFormComponent } from './chat-form/chat-form.component';
-import { FeedComponent } from './feed/feed.component';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { SignupFormComponent } from './signup-form/signup-form.component';
-import { UserItemComponent } from './user-item/user-item.component';
-import { ChatroomComponent } from './chatroom/chatroom.component';
+import { ChatroomListComponent } from './components/chatroom-components/chatroom-list/chatroom-list.component';
+import { MessageComponent } from './components/chatroom-components/message/message.component';
+import { ChatFormComponent } from './components/chatroom-components/chat-form/chat-form.component';
+import { FeedComponent } from './components/chatroom-components/feed/feed.component';
+import { LoginFormComponent } from './components/chatroom-components/login-form/login-form.component';
+import { SignupFormComponent } from './components/chatroom-components/signup-form/signup-form.component';
+import {UserItemComponent} from './components/chatroom-components/user-item/user-item.component';
+import {ChatroomComponent} from './components/chatroom-components/chatroom/chatroom.component';
 
 
 
@@ -35,7 +35,10 @@ const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
     {path: 'demo', component:AppComponent, pathMatch:'full'},
     {path: 'home', component:MainPageComponent, pathMatch:'full'},
-    {path: 'exhibit/:id', component:ExhibitComponent}
+    {path: 'exhibit/:id', component:ExhibitComponent},
+    {path: 'signup',component:SignupFormComponent},
+    {path: 'login', component:LoginFormComponent},
+    {path: 'chat', component:ChatFormComponent}
 ];
 
 @NgModule({
@@ -52,7 +55,7 @@ const appRoutes: Routes = [
     LoginFormComponent,
     SignupFormComponent,
     UserItemComponent,
-    ChatroomComponent,
+    ChatroomComponent
 
   ],
   imports: [
