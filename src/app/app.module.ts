@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeScreenComponent } from './components/welcome-screen/welcome-screen.component';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { ExhibitComponent } from './components/exhibit/exhibit.component';
 
@@ -17,6 +19,8 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 
 import {AuthenticationService} from './services/authentication.service';
 import {ExhibitService} from './services/exhibit.service';
+import {ChatService} from './services/chat.service';
+
 import { environment } from 'src/environments/environment';
 import { SafeURLPipe } from './pipes/safe-url.pipe';
 import { ChatroomListComponent } from './components/chatroom-components/chatroom-list/chatroom-list.component';
@@ -38,7 +42,7 @@ const appRoutes: Routes = [
     {path: 'exhibit/:id', component:ExhibitComponent},
     {path: 'signup',component:SignupFormComponent},
     {path: 'login', component:LoginFormComponent},
-    {path: 'chat', component:ChatFormComponent}
+    {path: 'chat', component:ChatroomComponent}
 ];
 
 @NgModule({
@@ -67,12 +71,13 @@ const appRoutes: Routes = [
       appRoutes,
       {enableTracing: true} //<--debugging
     ),
+    FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
-  providers: [AuthenticationService,ExhibitService],
+  providers: [AuthenticationService,ExhibitService,ChatService],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
