@@ -19,6 +19,13 @@ import {AuthenticationService} from './services/authentication.service';
 import {ExhibitService} from './services/exhibit.service';
 import { environment } from 'src/environments/environment';
 import { SafeURLPipe } from './pipes/safe-url.pipe';
+import { ChatroomListComponent } from './chatroom-list/chatroom-list.component';
+import { MessageComponent } from './message/message.component';
+import { ChatFormComponent } from './chat-form/chat-form.component';
+import { FeedComponent } from './feed/feed.component';
+import { LoginFormComponent } from './login-form/login-form.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
+import { UserItemComponent } from './user-item/user-item.component';
 
 
 
@@ -37,6 +44,13 @@ const appRoutes: Routes = [
     MainPageComponent,
     ExhibitComponent,
     SafeURLPipe,
+    ChatroomListComponent,
+    MessageComponent,
+    ChatFormComponent,
+    FeedComponent,
+    LoginFormComponent,
+    SignupFormComponent,
+    UserItemComponent,
 
   ],
   imports: [
