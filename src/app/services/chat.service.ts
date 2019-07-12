@@ -53,7 +53,7 @@ export class ChatService {
     console.log("Getting Messages");
     return this.firestore.collection('messages',
     ref =>{
-      return ref.orderBy('timeSent','desc').limit(25)
+      return ref.orderBy('timeSent','desc')
     }).valueChanges();
 
     // console.log("gettingMessages");

@@ -29,9 +29,8 @@ import { ChatFormComponent } from './components/chatroom-components/chat-form/ch
 import { FeedComponent } from './components/chatroom-components/feed/feed.component';
 import { LoginFormComponent } from './components/chatroom-components/login-form/login-form.component';
 import { SignupFormComponent } from './components/chatroom-components/signup-form/signup-form.component';
-import {UserItemComponent} from './components/chatroom-components/user-item/user-item.component';
 import {ChatroomComponent} from './components/chatroom-components/chatroom/chatroom.component';
-
+import {RoomItemComponent} from  './components/chatroom-components/room-item/room-item.component';
 
 
 
@@ -58,8 +57,8 @@ const appRoutes: Routes = [
     FeedComponent,
     LoginFormComponent,
     SignupFormComponent,
-    UserItemComponent,
-    ChatroomComponent
+    ChatroomComponent,
+    RoomItemComponent
 
   ],
   imports: [
