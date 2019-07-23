@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeScreenComponent } from './components/welcome-screen/welcome-screen.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { ExhibitComponent } from './components/exhibit/exhibit.component';
@@ -31,6 +32,8 @@ import { LoginFormComponent } from './components/chatroom-components/login-form/
 import { SignupFormComponent } from './components/chatroom-components/signup-form/signup-form.component';
 import {ChatroomComponent} from './components/chatroom-components/chatroom/chatroom.component';
 import {RoomItemComponent} from  './components/chatroom-components/room-item/room-item.component';
+import { fromEventPattern } from 'rxjs';
+import { MuseumShowListComponent } from './museum-show-list/museum-show-list.component';
 
 
 
@@ -41,7 +44,8 @@ const appRoutes: Routes = [
     {path: 'exhibit/:id', component:ExhibitComponent},
     {path: 'signup',component:SignupFormComponent},
     {path: 'login', component:LoginFormComponent},
-    {path: 'chat', component:ChatroomComponent}
+    {path: 'chat', component:ChatroomComponent},
+    {path: 'wordpress',component:MuseumShowListComponent}
 ];
 
 @NgModule({
@@ -58,7 +62,8 @@ const appRoutes: Routes = [
     LoginFormComponent,
     SignupFormComponent,
     ChatroomComponent,
-    RoomItemComponent
+    RoomItemComponent,
+    MuseumShowListComponent
 
   ],
   imports: [
@@ -74,7 +79,8 @@ const appRoutes: Routes = [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    HttpClientModule
   ],
   providers: [AuthenticationService,ExhibitService,ChatService],
   bootstrap: [AppComponent],

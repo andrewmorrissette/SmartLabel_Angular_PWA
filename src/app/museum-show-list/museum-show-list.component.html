@@ -1,0 +1,6 @@
+<p>
+  museum-show-list works!
+</p>
+<div *ngFor="let post of Posts" >
+ <html [innerHTML]= "sanitizeHTML(post.content.rendered)"></html>
+</div>
