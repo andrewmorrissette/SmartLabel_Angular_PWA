@@ -18,14 +18,6 @@ export class MuseumShowListComponent implements OnInit {
       console.log("data",data);
       this.Posts = data;
       console.log("POSTS, ", this.Posts);
-      var jsonData = JSON.parse(data.toString(), (key,value)=>{
-        if (typeof value === "string"){
-          return value.toUpperCase();
-        }
-        console.log("JSON: ",value);
-        return value;
-      })
-
       //this.evaluateHTML();
     })
   }
