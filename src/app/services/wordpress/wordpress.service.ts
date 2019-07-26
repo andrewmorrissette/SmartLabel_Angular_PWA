@@ -49,11 +49,12 @@ export class WordpressService {
     var masterCategory: Category = this.getCategoryByName("master");
     var masterPost = this.getPostsByCategoryID(masterCategory.id)[0];
     this.MasterLevelTag = this.getTagNameFromTagID(masterPost.tags[0]);
-
+    console.log("MasterTag Level: ",this.MasterLevelTag);
 
    }
    getPost(id:string) : Post{
      var post:Post;
+     console.log("Post: ",post);
      return post;
    }
    getCategoryByName(name:string) : Category{
@@ -61,6 +62,7 @@ export class WordpressService {
      this.http.get(this.wordpressAPI + 'categories?slug=' + name).subscribe(data =>{
       selectedCategory = data[0];
      })
+     console.log("Category by Name: ",selectedCategory);
      return selectedCategory;
    }
 
@@ -69,6 +71,7 @@ export class WordpressService {
      this.http.get(this.wordpressAPI + 'posts?categories=' + ID).subscribe(data =>{
       selectedPosts = data as any;
      })
+     console.log("Posts by Category ID: ",selectedPosts);
      return selectedPosts;
    }
    getTagNameFromTagID(ID:number):string{
@@ -76,6 +79,7 @@ export class WordpressService {
      this.http.get(this.wordpressAPI + 'tags/' + ID).subscribe(data =>{
        selectedTag = data as any;
      })
+     console.log("Tag Name: ",selectedTag.slug);
      return selectedTag.slug;
    }
    getCategories():Category[]{
@@ -84,6 +88,7 @@ export class WordpressService {
      this.http.get(this.wordpressAPI + 'categories').subscribe(data =>{
        allCategories = data as any;
      })
+     console.log("All Categories: ",allCategories);
      return allCategories
    }
    getCategoriesWithNoParents(allCategories:Category[]):Category[]{
@@ -96,6 +101,7 @@ export class WordpressService {
         selectedCategories.push(element);
       }
     })
+    console.log("Categories With No Parents: ",selectedCategories);
      return selectedCategories;
    }
    getCategoriesWithSameParent(allCategories:Category[],parentID:number):Category[]{
@@ -107,28 +113,34 @@ export class WordpressService {
         selectedCategories.push(element);
       }
     })
-    
+    console.log("Categories With Same Parents: ",selectedCategories);
     return selectedCategories;
    }
 
    getShowList():Show[]{
+     console.log("Getting Show List");
      var parentLessCategories = this.getCategoriesWithNoParents(this.getCategories());
      var shows:Show[];
+     console.log("Getting Show info for each category")
      parentLessCategories.forEach((category)=>{
        //getting show info
        var postsInCategory=this.getPostsByCategoryID(category.id);
        var hasPost:boolean = false;
+       console.log("Getting Post info for this category");
        postsInCategory.forEach((post)=>{
          //if any post has only count of 1 in categories return that id for show
          if(post.categories.length === 1){
+           console.log("Post does not have any other categories")
            hasPost = true;
            shows.push(new Show(category.slug,category.id,post.id))
          }
        })
        if(hasPost === false){
+         console.log("No posts are strictly this category")
          shows.push(new Show(category.slug,category.id,0));
        }
      })
+     console.log("Shows: ",shows)
      return shows;
    } 
 }
