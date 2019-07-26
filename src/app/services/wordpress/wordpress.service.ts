@@ -6,6 +6,7 @@ import {Category} from '../../models/wordpress/category.model';
 import {Comment} from '../../models/wordpress/comment.model';
 import{Post} from '../../models/wordpress/post.model';
 import{Tag} from '../../models/wordpress/tags.model';
+import{Show} from '../../models/wordpress/showClass.model';
 import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({
@@ -77,21 +78,57 @@ export class WordpressService {
      })
      return selectedTag.slug;
    }
-   getPostsWithNamesAndIDs(){
-     let tempPosts: [{name:string,id:string}];
-     type tempObject = {
-       name:string;
-       id:number;
-     }
-     
-
-     this.http.get(this.wordpressAPI + 'posts').subscribe(data=>{
-       
+   getCategories():Category[]{
+     //after can use get posts by categoryID
+     var allCategories:Category[];
+     this.http.get(this.wordpressAPI + 'categories').subscribe(data =>{
+       allCategories = data as any;
      })
+     return allCategories
    }
-   
-  
+   getCategoriesWithNoParents(allCategories:Category[]):Category[]{
+     //loop through all categories and for each category with parent = 0 & name !=Master or Uncategorized
+     var selectedCategories:Category[];
+     allCategories = this.getCategories();
+     allCategories.forEach((element)=>{
+      if(element.parent === 0 && element.slug !== "master" && element.slug !== 
+      "uncategorized"){
+        selectedCategories.push(element);
+      }
+    })
+     return selectedCategories;
+   }
+   getCategoriesWithSameParent(allCategories:Category[],parentID:number):Category[]{
+     var selectedCategories:Category[];
+     allCategories = this.getCategories();
+     allCategories.forEach((element)=>{
+      if(element.parent === parentID && element.slug !== "master" && element.slug !== 
+      "uncategorized"){
+        selectedCategories.push(element);
+      }
+    })
+    
+    return selectedCategories;
+   }
 
-
-
+   getShowList():Show[]{
+     var parentLessCategories = this.getCategoriesWithNoParents(this.getCategories());
+     var shows:Show[];
+     parentLessCategories.forEach((category)=>{
+       //getting show info
+       var postsInCategory=this.getPostsByCategoryID(category.id);
+       var hasPost:boolean = false;
+       postsInCategory.forEach((post)=>{
+         //if any post has only count of 1 in categories return that id for show
+         if(post.categories.length === 1){
+           hasPost = true;
+           shows.push(new Show(category.slug,category.id,post.id))
+         }
+       })
+       if(hasPost === false){
+         shows.push(new Show(category.slug,category.id,0));
+       }
+     })
+     return shows;
+   } 
 }
