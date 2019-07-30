@@ -33,19 +33,21 @@ import { SignupFormComponent } from './components/chatroom-components/signup-for
 import {ChatroomComponent} from './components/chatroom-components/chatroom/chatroom.component';
 import {RoomItemComponent} from  './components/chatroom-components/room-item/room-item.component';
 import { fromEventPattern } from 'rxjs';
-import { MuseumShowListComponent } from './museum-show-list/museum-show-list.component';
+import { MuseumShowListComponent } from './components/museum-show-list/museum-show-list.component';
+import { WordpressPostComponent } from './components/wordpress-post/wordpress-post.component';
 
 
 
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
     {path: 'demo', component:AppComponent, pathMatch:'full'},
-    {path: 'home', component:MainPageComponent, pathMatch:'full'},
+    {path: 'home', component:MuseumShowListComponent, pathMatch:'full'},
     {path: 'exhibit/:id', component:ExhibitComponent},
     {path: 'signup',component:SignupFormComponent},
     {path: 'login', component:LoginFormComponent},
     {path: 'chat', component:ChatroomComponent},
-    {path: 'wordpress',component:MuseumShowListComponent}
+    {path: 'wordpress',component:MuseumShowListComponent},
+    {path: 'wpExhibit/:id',component:WordpressPostComponent}
 ];
 
 @NgModule({
@@ -63,7 +65,8 @@ const appRoutes: Routes = [
     SignupFormComponent,
     ChatroomComponent,
     RoomItemComponent,
-    MuseumShowListComponent
+    MuseumShowListComponent,
+    WordpressPostComponent
 
   ],
   imports: [

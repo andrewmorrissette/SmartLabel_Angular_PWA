@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
+import {Observable, of, forkJoin} from 'rxjs';
+import {map,mergeMap, flatMap} from 'rxjs/operators';
 
 import {Category} from '../../models/wordpress/category.model';
 import {Comment} from '../../models/wordpress/comment.model';
@@ -8,6 +10,7 @@ import{Post} from '../../models/wordpress/post.model';
 import{Tag} from '../../models/wordpress/tags.model';
 import{Show} from '../../models/wordpress/showClass.model';
 import { stringify } from '@angular/compiler/src/util';
+import { keyframes } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +32,8 @@ export class WordpressService {
 
   private MasterLevelTag="";
   private PersonalLevelTag="";
+
+
   
   constructor(private http:HttpClient) {
     if(this.isPaid === false){
@@ -38,6 +43,43 @@ export class WordpressService {
       this.wordpressAPI = this.personalWordpressSite + this.wordpressPaidAPIUrl;
     }
    }
+
+   getCategoriesWithNoParents():Observable<Category[]>{
+    return this.http.get<Category[]>(this.wordpressAPI+"categories?parent=0");
+  }
+
+  getPostsByCategoryID(ID:number):Observable<Post[]>{
+    return this.http.get<Post[]>(this.wordpressAPI + 'posts?categories=' + ID);
+   }
+
+   getPostByPostID(id:number):Observable<Post>{
+     return this.http.get<Post>(this.wordpressAPI+"posts/"+id.toString())
+   }
+
+   getPostsByCategories(isParentless:Boolean = false, categoryName?:String):Observable<Post[]>{
+    if(isParentless){
+      return this.http.get(this.wordpressAPI+'categories?parent=0').pipe(flatMap((categories:Category[])=>{
+        if(categories.length > 0){
+          return forkJoin(categories.map((category:Category)=>{
+            return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
+          }))
+        }
+      }))
+    }
+    if(!isParentless && categoryName!==""){
+      return this.http.get(this.wordpressAPI+'categories?slug=' + categoryName).pipe(flatMap((categories: Category[])=>{
+        if(categories.length > 0){
+          return forkJoin(categories.map((category:Category)=>{
+            return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
+          }))
+
+        }
+      }))
+    }
+  }
+  getSubCategoriesOfCategoryID(categoryID:Number){
+    return this.http.get<Category[]>(this.wordpressAPI+"categories?parent="+categoryID);
+  }
 
    getMasterLevelTag(){
      //Go to Category looking for master name
@@ -52,6 +94,26 @@ export class WordpressService {
     console.log("MasterTag Level: ",this.MasterLevelTag);
 
    }
+
+
+
+  // getShowListObservable():Observable<Post[]>{
+  //   return this.getCategories().pipe(flatMap((category:any)=>{
+  //     return this.getPostsByCategoryID(294932)}));
+  // }
+
+  
+  //Get all the categories
+  //fork and get multiple posts for each category id
+  //using new posts, create show[]
+  getCategoriesByID(ids:number[]):Observable<Category[]>{
+    console.log("ID's to Fork",ids);
+    let observableBatch = [];
+    ids.forEach((num)=>{
+      observableBatch.push(this.http.get(this.wordpressAPI+"categories/"+num.toString()));
+    });
+    return forkJoin(observableBatch);
+  }
    getPost(id:string) : Post{
      var post:Post;
      console.log("Post: ",post);
@@ -65,15 +127,10 @@ export class WordpressService {
      console.log("Category by Name: ",selectedCategory);
      return selectedCategory;
    }
+   
+   
 
-   getPostsByCategoryID(ID:number):Post[]{
-    var selectedPosts:Post[];
-     this.http.get(this.wordpressAPI + 'posts?categories=' + ID).subscribe(data =>{
-      selectedPosts = data as any;
-     })
-     console.log("Posts by Category ID: ",selectedPosts);
-     return selectedPosts;
-   }
+   
    getTagNameFromTagID(ID:number):string{
      var selectedTag:Tag;
      this.http.get(this.wordpressAPI + 'tags/' + ID).subscribe(data =>{
@@ -82,31 +139,24 @@ export class WordpressService {
      console.log("Tag Name: ",selectedTag.slug);
      return selectedTag.slug;
    }
-   getCategories():Category[]{
-     //after can use get posts by categoryID
-     var allCategories:Category[];
-     this.http.get(this.wordpressAPI + 'categories').subscribe(data =>{
-       allCategories = data as any;
-     })
-     console.log("All Categories: ",allCategories);
-     return allCategories
+   getCategories(): Observable<Category[]>{
+     
+    return this.http.get<Category[]>(this.wordpressAPI + 'categories');
+    //after can use get posts by categoryID
+    //  var allCategories :Category[] = [];
+    //  this.http.get(this.wordpressAPI + 'categories').subscribe(data =>{
+    //     let masterCategories:Category[] = <Category[]>data;
+    //     let categories= masterCategories[1];
+    //     console.log("ugh",masterCategories);
+    //     allCategories = masterCategories;
+    //     console.log("All Categories:",allCategories);
+    //     return allCategories;
+    //  })
    }
-   getCategoriesWithNoParents(allCategories:Category[]):Category[]{
-     //loop through all categories and for each category with parent = 0 & name !=Master or Uncategorized
-     var selectedCategories:Category[];
-     allCategories = this.getCategories();
-     allCategories.forEach((element)=>{
-      if(element.parent === 0 && element.slug !== "master" && element.slug !== 
-      "uncategorized"){
-        selectedCategories.push(element);
-      }
-    })
-    console.log("Categories With No Parents: ",selectedCategories);
-     return selectedCategories;
-   }
+   
    getCategoriesWithSameParent(allCategories:Category[],parentID:number):Category[]{
      var selectedCategories:Category[];
-     allCategories = this.getCategories();
+     //allCategories = this.getCategories();
      allCategories.forEach((element)=>{
       if(element.parent === parentID && element.slug !== "master" && element.slug !== 
       "uncategorized"){
@@ -117,30 +167,38 @@ export class WordpressService {
     return selectedCategories;
    }
 
-   getShowList():Show[]{
-     console.log("Getting Show List");
-     var parentLessCategories = this.getCategoriesWithNoParents(this.getCategories());
-     var shows:Show[];
-     console.log("Getting Show info for each category")
-     parentLessCategories.forEach((category)=>{
-       //getting show info
-       var postsInCategory=this.getPostsByCategoryID(category.id);
-       var hasPost:boolean = false;
-       console.log("Getting Post info for this category");
-       postsInCategory.forEach((post)=>{
-         //if any post has only count of 1 in categories return that id for show
-         if(post.categories.length === 1){
-           console.log("Post does not have any other categories")
-           hasPost = true;
-           shows.push(new Show(category.slug,category.id,post.id))
-         }
-       })
-       if(hasPost === false){
-         console.log("No posts are strictly this category")
-         shows.push(new Show(category.slug,category.id,0));
-       }
-     })
-     console.log("Shows: ",shows)
-     return shows;
-   } 
+  //  getShowList(){
+  //    this.getCategories().subscribe((data)=>{
+  //      console.log("Testing Data",data);
+  //      var parentLessCategories = this.getCategoriesWithNoParents(data);
+  //      console.log("Getting Show info for each category")
+  //      var shows:Show[] = [];
+  //    parentLessCategories.forEach((category)=>{
+  //      //getting show info
+  //      this.getPostsByCategoryID(category.id).subscribe((postData)=>{
+  //       var hasPost:boolean = false;
+  //       console.log("Getting Post info for this category");
+  //       postData.forEach((post)=>{
+  //         //if any post has only count of 1 in categories return that id for show
+  //         if(post.categories.length === 1){
+  //           console.log("Post does not have any other categories")
+  //           hasPost = true;
+  //           shows.push(new Show(category.slug,category.id,post.id))
+  //         }
+  //       })
+  //       if(hasPost === false){
+  //         console.log("No posts are strictly this category")
+  //         shows.push(new Show(category.slug,category.id,0));
+  //       }
+  //       this.setObservedShow( of (shows));
+  //      });  
+  //    })
+  //   })
+  //  }
+
+   
+
+
 }
+
+

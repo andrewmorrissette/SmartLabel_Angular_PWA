@@ -7,5 +7,17 @@ export interface Category{
     slug?:string,
     taxonomy?:string,
     parent?:number,
-    meta?:any
+    meta?:any,
+
+    // constructor(category:any){
+    //     this.id = category.id;
+    //     this.count = category.count;
+    //     this.description = category.description;
+    //     this.link = category.link;
+    //     this.meta = category.meta;
+    //     this.name = category.name;
+    //     this.parent = category.parent;
+    //     this.slug = category.slug;
+    //     this.taxonomy = category.taxonomy;
+    // }
 }

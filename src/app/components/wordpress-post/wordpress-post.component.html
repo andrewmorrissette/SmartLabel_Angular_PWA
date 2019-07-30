@@ -1,0 +1,10 @@
+<mat-toolbar color="primary" class="toolbar">
+  <mat-toolbar-row>
+    <a mat-button routerLink="/home"><mat-icon>home</mat-icon></a>
+    <h2>{{post.title.rendered}}</h2>
+    <a mat-button routerLink="/home"><mat-icon>chat_bubble</mat-icon></a>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class ="center" [innerHTML] = "innerHTML"></div>
+<button mat-fab color="primary" class="button1"><mat-icon>arrow_back</mat-icon></button>
+<button mat-fab color="primary" class="button2"><mat-icon>arrow_forward</mat-icon></button>
