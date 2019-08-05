@@ -56,29 +56,33 @@ export class WordpressService {
      return this.http.get<Post>(this.wordpressAPI+"posts/"+id.toString())
    }
 
-   getPostsByCategories(isParentless:Boolean = false, categoryName?:String):Observable<Post[]>{
-    if(isParentless){
-      return this.http.get(this.wordpressAPI+'categories?parent=0').pipe(flatMap((categories:Category[])=>{
-        if(categories.length > 0){
-          return forkJoin(categories.map((category:Category)=>{
-            return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
-          }))
-        }
-      }))
-    }
-    if(!isParentless && categoryName!==""){
-      return this.http.get(this.wordpressAPI+'categories?slug=' + categoryName).pipe(flatMap((categories: Category[])=>{
-        if(categories.length > 0){
-          return forkJoin(categories.map((category:Category)=>{
-            return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
-          }))
+  //  getPostsByCategories(isParentless:Boolean = false, categoryName?:String):Observable<Post[]>{
+  //   if(isParentless){
+  //     return this.http.get(this.wordpressAPI+'categories?parent=0').pipe(flatMap((categories:Category[])=>{
+  //       if(categories.length > 0){
+  //         return forkJoin(categories.map((category:Category)=>{
+  //           return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
+  //         }))
+  //       }
+  //     }))
+  //   }
+  //   if(!isParentless && categoryName!==""){
+  //     return this.http.get(this.wordpressAPI+'categories?slug=' + categoryName).pipe(flatMap((categories: Category[])=>{
+  //       if(categories.length > 0){
+  //         return forkJoin(categories.map((category:Category)=>{
+  //           return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
+  //         }))
 
-        }
-      }))
-    }
-  }
+  //       }
+  //     }))
+  //   }
+  // }
   getSubCategoriesOfCategoryID(categoryID:Number){
     return this.http.get<Category[]>(this.wordpressAPI+"categories?parent="+categoryID);
+  }
+
+  getCommentsOfPostID(postID:Number){
+    return this.http.get<Comment[]>(this.wordpressAPI + "comment?post=" + postID.toString());
   }
 
    getMasterLevelTag(){
@@ -155,7 +159,7 @@ export class WordpressService {
    }
    
    getCategoriesWithSameParent(allCategories:Category[],parentID:number):Category[]{
-     var selectedCategories:Category[];
+     var selectedCategories:Category[]=[];
      //allCategories = this.getCategories();
      allCategories.forEach((element)=>{
       if(element.parent === parentID && element.slug !== "master" && element.slug !== 

@@ -1,10 +1,28 @@
 <mat-toolbar color="primary" class="toolbar">
   <mat-toolbar-row>
-    <a mat-button routerLink="/home"><mat-icon>home</mat-icon></a>
+    <a mat-button onClick="javascript:history.back()"><mat-icon>arrow_back</mat-icon></a>
     <h2>{{post.title.rendered}}</h2>
-    <a mat-button routerLink="/home"><mat-icon>chat_bubble</mat-icon></a>
+    <a mat-button routerLink="/chat"><mat-icon>chat_bubble</mat-icon></a>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class ="center" [innerHTML] = "innerHTML"></div>
-<button mat-fab color="primary" class="button1"><mat-icon>arrow_back</mat-icon></button>
-<button mat-fab color="primary" class="button2"><mat-icon>arrow_forward</mat-icon></button>
+<p class="center" *ngIf="subCategories.length!==0"><b>Exhibits Within Collection</b></p>
+<div class="center" *ngFor="let category of subCategories">
+  <button mat-raised-button class="exhibitContent" (click)="onSubCategoryClick(category.id)">
+      {{category.name}}
+  </button>
+  <br>
+</div>
+<br>
+
+<div class="bottomWrapper">
+<mat-toolbar color="primary" class="bottomNav">
+    <mat-toolbar-row>
+        <a  mat-button  routerLink="/home">Tours</a>
+        <a  mat-button  routerLink="/home">AR</a>
+        <a  mat-fab  routerLink="/home" color="primary"><mat-icon>power_settings_new</mat-icon></a>
+        <a  mat-button  routerLink="/chat">Chat</a>
+        <a  mat-button  routerLink="/home">...</a>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>
