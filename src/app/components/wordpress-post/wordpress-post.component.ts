@@ -38,11 +38,13 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     innerHTML : SafeHtml;
     subCategories:Category[]=[];
     hasObjects : boolean = false;
+    id:string;
     
 
     initialiseInvites() {
       // Set default values and re-fetch any data you need.
       let id = this._router.snapshot.paramMap.get('id');
+      this.id = id;
     let parentCategory:string = this._router.snapshot.paramMap.get("category");
     
     
@@ -253,6 +255,10 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
   }
   onBack(){
     this._location.back();
+  }
+
+  chatClicked(){
+    this._route.navigate(['/chat/',this.id]);
   }
 
 }

@@ -24,6 +24,7 @@ export interface Content{
 
 }
 export interface AuthorAvatarUrls{
+    rendered?:string,
     24?:string,
     48?:string,
     96?:string

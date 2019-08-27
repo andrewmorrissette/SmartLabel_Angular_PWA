@@ -14,6 +14,10 @@ export class WelcomeScreenComponent implements OnInit {
   constructor(private _router: ActivatedRoute, private _route: Router) { }
 
   ngOnInit() {
+    this._router.queryParams.subscribe(params => {
+      let token = params['access_token'];
+      console.log(token); // Print the parameter to the console. 
+  });
   }
 
   onEnter(): void{

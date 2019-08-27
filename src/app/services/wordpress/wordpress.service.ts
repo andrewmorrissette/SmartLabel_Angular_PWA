@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient,HttpHeaders} from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
-import {Observable, of, forkJoin} from 'rxjs';
+import {Observable, of, forkJoin,interval} from 'rxjs';
 import {map,mergeMap, flatMap} from 'rxjs/operators';
 
 import {Category} from '../../models/wordpress/category.model';
@@ -22,6 +22,13 @@ export class WordpressService {
   //////////////////
   private personalWordpressSite:string = "testingsmartlabel.art.blog/"; //Change to your URL
   private isPaid:boolean = false; //Are you paying for it to use plugins?
+  private blogID:string = "164354823"; //can get at https://public-api.wordpress.com/rest/v1.1/sites/$yourSite
+  private clientID:string = "66565" //Given after creating the application in developer.wordpress.com
+  private globalToken:string = "RZnbxraO4Z";
+  private clientSecretKey:string = "TMSblbnwAidBY5hld5S0rEyJUa7PFOY60uF3bsha4JoTNysYPfXby0ib49Z0v0oW";
+  private clientAuthToken:string = "";
+  private authCode:string = "";
+
 
   //////////////////
   //DO NOT CHANGE///
@@ -32,6 +39,7 @@ export class WordpressService {
 
   private MasterLevelTag="";
   private PersonalLevelTag="";
+  
 
 
   
@@ -42,6 +50,48 @@ export class WordpressService {
     else{
       this.wordpressAPI = this.personalWordpressSite + this.wordpressPaidAPIUrl;
     }
+    
+   }
+
+  //  LoginUser():Observable<any>{
+  //   const data = JSON.stringify({
+  //     "client_id":this.clientID,
+  //     "redirect_uri":"https://localhost:4200",
+  //     "response_type":"token",
+  //     "blog":this.blogID
+  //   });
+
+  //   return this.http.post('https://public-api.wordpress.com/oauth2/authorize',data);
+  //   }
+
+  LoginUser():string{
+    return "https://public-api.wordpress.com/oauth2/authorize?client_id=66565&redirect_uri=https://localhost:4200/chat/16&response_type=code&blog=164354823";
+  }
+
+  setAuthToken(token:string){
+    this.clientAuthToken = token;
+  }
+  getAuthToken(){
+    return this.clientAuthToken;
+  }
+  setCodeToken(code:string){
+    this.authCode = code;
+  }
+  getAuthCode(){
+    return this.authCode;
+  }
+
+
+   getAuthenticationToken():Observable<any>{
+    const data = JSON.stringify({
+      "client_id":this.clientID,
+      "redirect_uri":"https://localhost:4200/login",
+      "code":this.authCode,
+      "grant_type":"authorization_code",
+    });
+
+    return this.http.post("https://public-api.wordpress.com/oauth2/token",data);
+
    }
 
    getCategoriesWithNoParents():Observable<Category[]>{
@@ -82,7 +132,28 @@ export class WordpressService {
   }
 
   getCommentsOfPostID(postID:Number){
-    return this.http.get<Comment[]>(this.wordpressAPI + "comment?post=" + postID.toString());
+    return interval(1000).pipe(flatMap(()=>{
+      return this.http.get<Comment[]>(this.wordpressAPI + "comments?post=" + postID.toString());
+    }));
+    //return this.http.get<Comment[]>(this.wordpressAPI + "comments?post=" + postID.toString());
+  }
+
+  postCommentOnPostID(PostID:string,data:any,content:string){
+    console.log("Inside Service",data);
+
+    //Code that worked: eDrnE2O0Y2h@tjq1E3T6QRV&1fDzMPLb0w*nSgIelaXKX46g@f23#N$L^jezsFIK
+    let headers = new HttpHeaders({
+      'Authorization':'BEARER ' + this.clientAuthToken
+    });
+    console.log("Client Authentication",this.clientAuthToken);
+    //headers.append('Authorization',"Bearer "+this.clientAuthToken);
+    console.log("Headers",headers.has('Authorization'));
+    let options = {headers:headers};
+    console.log("Options",options.headers.getAll('Authorization'));
+    console.log(this.http.post(this.wordpressAPI+"posts/"+PostID+"/replies/new",data,options),"API CALL");
+    return this.http.post(this.wordpressAPI+"comments?post="+PostID+"&content="+content,data,options);
+
+    
   }
 
    getMasterLevelTag(){

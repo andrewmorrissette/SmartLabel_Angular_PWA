@@ -1,19 +1,24 @@
 <mat-toolbar color="primary" class="toolbar">
   <mat-toolbar-row>
     <a mat-button onClick="javascript:history.back()"><mat-icon>arrow_back</mat-icon></a>
-    <h2 [innerHTML]="post.title.rendered"></h2>
-    <a mat-button (click)="chatClicked()"><mat-icon>chat_bubble</mat-icon></a>
+    <h2>Login</h2>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class ="center" [innerHTML] = "innerHTML"></div>
-<p class="center" *ngIf="subCategories.length!==0"><b>Exhibits Within Collection</b></p>
-<div class="center" *ngFor="let category of subCategories">
-  <button mat-raised-button class="exhibitContent" (click)="onSubCategoryClick(category.id)">
-      {{category.name}}
+
+
+<div *ngIf="hasToken === false">
+  <p class="center">Login to Wordpress to join the Conversation</p>
+  <button mat-raised-button class="center" (click)="loginToWordpress()">
+    Go to Wordpress
   </button>
-  <br>
 </div>
-<br>
+
+<div *ngIf="hasToken === true">
+  <p class="center">Thank you for logging into Wordpress!</p>
+  <button mat-raised-button class="center" (click)="getToken()">
+    Login to App
+  </button>
+</div>
 
 <div class="bottomWrapper">
 <mat-toolbar color="primary" class="bottomNav">
@@ -21,7 +26,6 @@
         <a  mat-button  routerLink="/home">Tours</a>
         <a  mat-button  routerLink="/home">AR</a>
         <a  mat-fab  routerLink="/home" color="primary"><mat-icon>power_settings_new</mat-icon></a>
-        <a  mat-button  (click)="chatClicked()">Chat</a>
         <a  mat-button  routerLink="/home">...</a>
     </mat-toolbar-row>
   </mat-toolbar>

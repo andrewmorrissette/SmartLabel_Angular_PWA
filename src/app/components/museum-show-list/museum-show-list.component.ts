@@ -34,7 +34,6 @@ export class MuseumShowListComponent implements OnInit {
   testBool:boolean = false;
 
   ngOnInit() {
-    let id = this._router.snapshot.paramMap.get('category');
     let parentCategory:string = this._router.snapshot.paramMap.get("category");
 
     if(parentCategory !== null && parentCategory !== ""){
