@@ -2,14 +2,16 @@ import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Exhibit } from 'src/app/models/exhibit.model';
-import {WordpressService} from '../../services/wordpress/wordpress.service';
+import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+//import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import { Pipe, PipeTransform } from '@angular/core';
 import { SecurityContext } from '@angular/core';
-import { Post } from 'src/app/models/wordpress/post.model';
+import { Post } from 'src/app/models/localWordpressModels/post.model';
 import { stringify } from 'querystring';
 import { Category } from 'src/app/models/wordpress/category.model';
 import {Location} from '@angular/common';
+import { SafeURLPipe } from 'src/app/pipes/safe-url.pipe';
 @Component({
   selector: 'app-wordpress-post',
   templateUrl: './wordpress-post.component.html',
@@ -18,11 +20,11 @@ import {Location} from '@angular/common';
 export class WordpressPostComponent implements OnInit,AfterContentInit {
 
   navigationSubscription;
-
+  
   constructor(
     private _router: ActivatedRoute, 
     private _route: Router, 
-    private wordpressAPI: WordpressService,
+    private wordpressAPI: LocalWordpressService,
     private sanitizer:DomSanitizer,
     private _location: Location) { 
       this.navigationSubscription = this._route.events.subscribe((e: any) => {
@@ -36,6 +38,8 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
 
     post:Post;
     innerHTML : SafeHtml;
+    videoHTML: SafeHtml;
+    audioURL: SafeUrl;
     subCategories:Category[]=[];
     hasObjects : boolean = false;
     id:string;
@@ -52,9 +56,13 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     this.wordpressAPI.getPostByPostID(Number(id)).subscribe((post)=>{
       console.log("Post: ",post);
       this.post = post;
-      
-      this.evaluateHTML();
-      this.innerHTML = this.sanitizeHTML(this.post.content.rendered);  
+      //this.evaluateHTML();
+      this.innerHTML = this.sanitizeHTML(this.post.acf.content); 
+      this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
+      this.audioURL = this.sanitizeURL(this.post.acf.audio);
+
+      console.log("VideoHTML: ",this.videoHTML);
+
       if(parentCategory !== null && parentCategory !== ""){
         console.log("Checking for categories");
         console.log("ParentCategory",parentCategory);
@@ -82,8 +90,11 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       console.log("Post: ",post);
       this.post = post;
       
-      this.evaluateHTML();
-      this.innerHTML = this.sanitizeHTML(this.post.content.rendered);  
+      //this.evaluateHTML();
+      this.innerHTML = this.sanitizeHTML(this.post.acf.content);  
+      this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
+      this.audioURL = this.sanitizeURL(this.post.acf.audio);
+      console.log("VideoHTML: ",this.videoHTML);
       if(parentCategory !== null && parentCategory !== ""){
         console.log("Checking for categories");
         console.log("ParentCategory",parentCategory);
@@ -120,11 +131,11 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
        var conversionArray:string[]=[];
        conversionArray=this.lookForTag(conversionTypeWanted);
        //console.log("Converted String",conversionArray);
-       var tempText = this.post.content.rendered;
+       var tempText = this.post.acf.content;
        //console.log("Are they different",[conversionArray[0],this.post.content.rendered]);
        
        if(conversionArray[0][0]==="<"&&conversionArray[0][1]==="a"){
-        this.post.content.rendered = tempText.replace(conversionArray[0],this.replacementTag([conversionTypeWanted,conversionArray[1]]));
+        this.post.acf.content = tempText.replace(conversionArray[0],this.replacementTag([conversionTypeWanted,conversionArray[1]]));
        }
        //console.log("After Conversion Post",this.post);
   }
@@ -135,7 +146,7 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       var href:string="";
       var count:number = 0;
       var bracketCount:number=0;
-      for(let character of this.post.content.rendered){
+      for(let character of this.post.acf.content){
         count++;
 
         //console.log("Debugging ending",character,bracketCount,characterizedString.substring(10,12));
@@ -197,6 +208,11 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     return temp;
   }
 
+  sanitizeURL(text:string){
+    var temp = this.sanitizer.bypassSecurityTrustUrl(text);
+    return temp;
+  }
+
   // checkSubCategories(id:string){
   //   this.wordpressAPI.getSubCategoriesOfCategoryID(Number(id)).subscribe((children)=>{
   //     this.subCategories = children;
@@ -214,14 +230,14 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       var posts:Post[]=tempPosts;
       for(var post of posts){
         console.log("Posts: ",posts);
-        console.log("post cat length: ",post.categories.length);
+        console.log("post cat length: ",post.ondisplay.values.length);
         console.log("subCategoriesArray Length: ",subCategoriesArray.length);
         var hasMasterPost:number[]=[];
         var hasNextPost:number[]=[];
-        if(post.categories.length !== subCategoriesArray.length+1){
+        if(post.ondisplay.values.length !== subCategoriesArray.length+1){
           var tempCatIDs:number[]=[];
           
-          for(var num of post.categories){
+          for(var num of post.ondisplay){
             if(num !== id && !subCategoriesArray.includes(num)){
               tempCatIDs.push(id);
             }

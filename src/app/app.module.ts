@@ -48,7 +48,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
 import { WordpressCommentComponent } from './components/wordpress-comment/wordpress-comment.component';
 import {LoginComponent} from './components/login/login.component';
-
+import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component'
 
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
@@ -63,7 +63,9 @@ const appRoutes: Routes = [
     {path: 'wordpress',component:MuseumShowListComponent},
     {path: 'wpExhibit/:id',component:WordpressPostComponent},
     {path: 'wpExhibit/:id/:category',component:WordpressPostComponent},
-    {path: 'login',component:LoginComponent}
+    {path: 'login',component:LoginComponent},
+    {path: 'label/:id',component:WordpressLabelComponent},
+    {path: 'label/:id/:category',component:WordpressLabelComponent},
     
 ];
 
@@ -86,7 +88,8 @@ const appRoutes: Routes = [
     WordpressPostComponent,
     WordpressChatComponent,
     WordpressCommentComponent,
-    LoginComponent
+    LoginComponent,
+    WordpressLabelComponent
 
   ],
   imports: [

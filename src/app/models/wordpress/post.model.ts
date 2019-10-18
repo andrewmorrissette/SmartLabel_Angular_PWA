@@ -25,13 +25,18 @@ export interface Post{
     meta?:Meta,
     sticky?:boolean,
     template?:string,
-    categories?:[number],
+    ondisplay?:[number],
     tags?:[number]
+    acf?:acf
 
     
 
 
     
+}
+
+export interface acf{
+    content?:string
 }
 
 export interface Guid{

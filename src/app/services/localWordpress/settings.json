@@ -1,0 +1,7 @@
+{
+  "client_id": "66565",
+  "client_secret": "TMSblbnwAidBY5hld5S0rEyJUa7PFOY60uF3bsha4JoTNysYPfXby0ib49Z0v0oW ",
+  "url": {
+    "redirect": "https://localhost:4200/chat/16"
+  }
+}

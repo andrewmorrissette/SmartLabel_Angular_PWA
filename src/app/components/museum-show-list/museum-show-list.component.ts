@@ -1,7 +1,8 @@
 import { Component, OnInit, OnChanges, AfterContentInit, SimpleChanges } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
-import {WordpressService} from '../../services/wordpress/wordpress.service';
+import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+//import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
@@ -24,7 +25,7 @@ export class MuseumShowListComponent implements OnInit {
 
   constructor(private http: HttpClient, 
     private sanitizer: DomSanitizer, 
-    private wordpressAPI:WordpressService,
+    private wordpressAPI:LocalWordpressService,
     private _route: Router,
     private _router: ActivatedRoute,) { }
   Posts:Post[];
@@ -76,9 +77,11 @@ export class MuseumShowListComponent implements OnInit {
   }
 
   onClick(id:number){
+    console.log("ID CLICKED: ",id);
     this.wordpressAPI.getSubCategoriesOfCategoryID(id).subscribe((children)=>{
       console.log("Chillens",children);
       if(children.length===0){
+        console.log("ID: ",id);
         this.wordpressAPI.getPostsByCategoryID(id).subscribe((posts)=>{
           console.log("Going to route", posts);
           this._route.navigate(['/wpExhibit/',posts[0].id]);
@@ -97,9 +100,12 @@ export class MuseumShowListComponent implements OnInit {
           var hasMasterPost:number[]=[];
           var hasNextPost:number[]=[];
           for(var post of posts){
-            if(post.categories.length !== subCategoriesArray.length+1){
+            // let displayCount = post.onDisplay;
+            // let displayCount2 = displayCount.values.length;
+            console.log(post,"On Display Post");
+            if(post.ondisplay.values.length !== subCategoriesArray.length+1){
               var tempCatIDs:number[]=[];
-              for(var num of post.categories){
+              for(var num of post.ondisplay){
                 if(num !== id && !subCategoriesArray.includes(num)){
                   tempCatIDs.push(id);
                 }
