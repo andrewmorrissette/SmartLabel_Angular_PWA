@@ -1,17 +1,14 @@
 import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { Exhibit } from 'src/app/models/exhibit.model';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
 //import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
-import { Pipe, PipeTransform } from '@angular/core';
-import { SecurityContext } from '@angular/core';
 import { Post } from 'src/app/models/localWordpressModels/post.model';
-import { stringify } from 'querystring';
-import { Category } from 'src/app/models/wordpress/category.model';
-import {Location} from '@angular/common';
-import { SafeURLPipe } from 'src/app/pipes/safe-url.pipe';
+import {selectedLabels} from 'src/app/models/localWordpressModels/selectedlabels.model';
+import {smartLabel} from 'src/app/models/localWordpressModels/smartLabel.model';
+import {SubscriptionLike} from 'rxjs';
+
 @Component({
   selector: 'app-wordpress-label',
   templateUrl: './wordpress-label.component.html',
@@ -25,14 +22,7 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
     private _router: ActivatedRoute, 
     private _route: Router, 
     private wordpressAPI: LocalWordpressService,
-    private sanitizer:DomSanitizer,
-    private _location: Location) { 
-      this.navigationSubscription = this._route.events.subscribe((e: any) => {
-        // If it is a NavigationEnd event re-initalise the component
-        if (e instanceof NavigationEnd) {
-          this.initialiseInvites();
-        }
-      });
+    private sanitizer:DomSanitizer) {
     }
     
 
@@ -40,76 +30,33 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
     innerHTML : SafeHtml;
     videoHTML: SafeHtml;
     audioURL: SafeUrl;
-    subCategories:Category[]=[];
-    hasObjects : boolean = false;
+    hasVideo: boolean = false;
+    hasAudio: boolean = false;
+    hasQRCode: boolean = false;
+    labels: number[] = [];
+    labelContent: smartLabel;
     id:string;
-    
+    showButtons:boolean = false;
+    showLabelContent:boolean = false;
 
-    initialiseInvites() {
-      // Set default values and re-fetch any data you need.
-      let id = this._router.snapshot.paramMap.get('id');
-      this.id = id;
-    let parentCategory:string = this._router.snapshot.paramMap.get("category");
-    
-    
-    console.log("SubCategories: ",this.subCategories);
-    this.wordpressAPI.getLabelByLabelID(Number(id)).subscribe((post)=>{
-      console.log("Post: ",post);
-      this.post = post;
-      //this.evaluateHTML();
-      this.innerHTML = this.sanitizeHTML(this.post.acf.content); 
-      this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
-      this.audioURL = this.sanitizeURL(this.post.acf.audio);
+    private labelSelectionSubscription:SubscriptionLike;
 
-      console.log("VideoHTML: ",this.videoHTML);
-
-      if(parentCategory !== null && parentCategory !== ""){
-        console.log("Checking for categories");
-        console.log("ParentCategory",parentCategory);
-        this.wordpressAPI.getSubCategoriesOfCategoryID(Number(parentCategory)).subscribe((children)=>{
-          console.log("Children",children);
-          this.subCategories = children;
-          if(this.subCategories.length!==0){
-            this.hasObjects = true;
-          }
-        })
-
-        // this.checkSubCategories(parentCategory);
-      }
-    })
-    }
-    
 
   ngOnInit() {
-    
     let id = this._router.snapshot.paramMap.get('id');
-    let parentCategory:string = this._router.snapshot.paramMap.get("category");
-    
-    
-    console.log("SubCategories: ",this.subCategories);
-    this.wordpressAPI.getPostByPostID(Number(id)).subscribe((post)=>{
-      console.log("Post: ",post);
-      this.post = post;
-      
-      //this.evaluateHTML();
-      this.innerHTML = this.sanitizeHTML(this.post.acf.content);  
-      this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
-      this.audioURL = this.sanitizeURL(this.post.acf.audio);
-      console.log("VideoHTML: ",this.videoHTML);
-      if(parentCategory !== null && parentCategory !== ""){
-        console.log("Checking for categories");
-        console.log("ParentCategory",parentCategory);
-        this.wordpressAPI.getSubCategoriesOfCategoryID(Number(parentCategory)).subscribe((children)=>{
-          console.log("Children",children);
-          this.subCategories = children;
-          if(this.subCategories.length!==0){
-            this.hasObjects = true;
-          }
-        })
+    if(id != "undefined" && id != "null" && id!=""){
+      this.wordpressAPI.getLabels().subscribe((selectedLabels)=>{
+        this.showButtons = true;
+        console.log("Selected Label Post: ",selectedLabels[0]);
+        console.log("id: ", selectedLabels[0].acf["smart-label-1"])
+        this.labels.push(selectedLabels[0].acf["smart-label-1"]);
+        this.labels.push(selectedLabels[0].acf["smart-label-2"]);
+      });
+    }
+    else{
+      this.getLabel(Number(id));
+    }
 
-        // this.checkSubCategories(parentCategory);
-      }
-    })
   }
   ngAfterContentInit(){
     console.log("POSTS: ",this.post);
@@ -120,9 +67,37 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
     // avoid memory leaks here by cleaning up after ourselves. If we  
     // don't then we will continue to run our initialiseInvites()   
     // method on every navigationEnd event.
-    if (this.navigationSubscription) {  
-       this.navigationSubscription.unsubscribe();
+    if (this.labelSelectionSubscription) {  
+       this.labelSelectionSubscription.unsubscribe();
     }
+  }
+
+  getLabel(id:Number){
+    console.log("Getting Label for number: ",id);
+    this.showButtons = false;
+    this.labelSelectionSubscription = this.wordpressAPI.getLabelByLabelID(Number(id)).subscribe((label)=>{
+      console.log("Label: ",label);
+      this.labelContent = label;
+      //this.evaluateHTML();
+      this.innerHTML = this.sanitizeHTML(this.labelContent.acf.content);
+      
+      if(this.labelContent.acf.video != ""){
+        console.log("Video: ",this.labelContent.acf.video);
+        this.hasVideo = true;
+        this.videoHTML = this.sanitizeHTML(this.labelContent.acf.video); 
+      }
+
+      if(this.labelContent.acf.audio != null){
+        console.log("Audio: ",this.labelContent.acf.audio);
+        this.hasAudio = true;
+        this.audioURL = this.sanitizeURL(this.labelContent.acf.audio);
+      }
+      this.showLabelContent = true;
+
+      if(this.labelContent.acf.qr_image != false){
+        this.hasQRCode = true;
+      }
+    })
   }
 
   sanitizeHTML(text:string){
@@ -143,6 +118,11 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
 
   chatClicked(){
     this._route.navigate(['/chat/',this.id]);
+  }
+
+  onClick(id:number){
+    console.log("Clicked!",id);
+    this.getLabel(id);
   }
 
 }

@@ -8,10 +8,8 @@ import {Category} from '../../models/wordpress/category.model';
 import {Comment} from '../../models/wordpress/comment.model';
 import{Post} from '../../models/localWordpressModels/post.model';
 import{Tag} from '../../models/wordpress/tags.model';
-import{Show} from '../../models/wordpress/showClass.model';
-import { stringify } from '@angular/compiler/src/util';
-import { keyframes } from '@angular/animations';
-
+import {selectedLabels} from 'src/app/models/localWordpressModels/selectedlabels.model';
+import {smartLabel} from 'src/app/models/localWordpressModels/smartLabel.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -107,11 +105,13 @@ export class LocalWordpressService {
      return this.http.get<Post>(this.wordpressAPI+"app_posts/"+id.toString());
    }
 
-   getLabels(id:number):Observable<Category>{
-     return this.http.get<Category>(this.wordpressAPI+"pages?slug=label-select");
+   getLabels():Observable<selectedLabels>{
+    return interval(10000).pipe(flatMap(()=>{
+      return this.http.get<selectedLabels>(this.wordpressAPI+"pages?slug=label-select");
+    }));
    }
-   getLabelByLabelID(id:number):Observable<Post>{
-     return this.http.get<Post>(this.wordpressAPI+"label/"+id.toString());
+   getLabelByLabelID(id:number):Observable<smartLabel>{
+     return this.http.get<smartLabel>(this.wordpressAPI+"label/"+id.toString());
    }
 
   //  getPostsByCategories(isParentless:Boolean = false, categoryName?:String):Observable<Post[]>{

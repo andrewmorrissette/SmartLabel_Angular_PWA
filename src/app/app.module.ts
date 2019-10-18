@@ -64,8 +64,8 @@ const appRoutes: Routes = [
     {path: 'wpExhibit/:id',component:WordpressPostComponent},
     {path: 'wpExhibit/:id/:category',component:WordpressPostComponent},
     {path: 'login',component:LoginComponent},
+    {path: 'label',component:WordpressLabelComponent},
     {path: 'label/:id',component:WordpressLabelComponent},
-    {path: 'label/:id/:category',component:WordpressLabelComponent},
     
 ];
 
