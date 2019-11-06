@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomeScreenComponent } from './components/welcome-screen/welcome-screen.component';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { fromEventPattern } from 'rxjs';
 
@@ -48,7 +48,8 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
 import { WordpressCommentComponent } from './components/wordpress-comment/wordpress-comment.component';
 import {LoginComponent} from './components/login/login.component';
-import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component'
+import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component';
+import { RegisterComponent } from './components/register/register.component'
 
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
@@ -66,6 +67,7 @@ const appRoutes: Routes = [
     {path: 'login',component:LoginComponent},
     {path: 'label',component:WordpressLabelComponent},
     {path: 'label/:id',component:WordpressLabelComponent},
+    {path: 'register',component:RegisterComponent}
     
 ];
 
@@ -89,7 +91,8 @@ const appRoutes: Routes = [
     WordpressChatComponent,
     WordpressCommentComponent,
     LoginComponent,
-    WordpressLabelComponent
+    WordpressLabelComponent,
+    RegisterComponent
 
   ],
   imports: [
@@ -102,6 +105,7 @@ const appRoutes: Routes = [
       {enableTracing: true} //<--debugging
     ),
     FormsModule,
+    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,

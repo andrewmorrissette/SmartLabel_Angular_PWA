@@ -45,8 +45,9 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
   ngOnInit() {
     let id = this._router.snapshot.paramMap.get('id');
     if(id != "undefined" && id != "null" && id!=""){
+      this.showButtons = true;
       this.wordpressAPI.getLabels().subscribe((selectedLabels)=>{
-        this.showButtons = true;
+        
         console.log("Selected Label Post: ",selectedLabels[0]);
         console.log("id: ", selectedLabels[0].acf["smart-label-1"])
         this.labels.push(selectedLabels[0].acf["smart-label-1"]);
@@ -123,6 +124,10 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
   onClick(id:number){
     console.log("Clicked!",id);
     this.getLabel(id);
+  }
+  showLabels(){
+    this.showButtons = true;
+    this.showLabelContent = false;
   }
 
 }

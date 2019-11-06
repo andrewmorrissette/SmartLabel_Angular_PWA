@@ -18,7 +18,8 @@ export class LocalWordpressService {
   //////////////////
   //////CHANGE//////
   //////////////////
-  private personalWordpressSite:string = "http://localhost/cultureconnect/"//"testingsmartlabel.art.blog/"; //Change to your URL
+  private personalWordpressSite:string = "http://localhost/cultureconnect/"//"https://02911d53.ngrok.io/cultureconnect/"
+  //"testingsmartlabel.art.blog/"; //Change to your URL
   private isPaid:boolean = true; //Are you paying for it to use plugins?
   private blogID:string = "164354823"; //can get at https://public-api.wordpress.com/rest/v1.1/sites/$yourSite
   private clientID:string = "66565" //Given after creating the application in developer.wordpress.com
@@ -51,47 +52,6 @@ export class LocalWordpressService {
     
    }
 
-  //  LoginUser():Observable<any>{
-  //   const data = JSON.stringify({
-  //     "client_id":this.clientID,
-  //     "redirect_uri":"https://localhost:4200",
-  //     "response_type":"token",
-  //     "blog":this.blogID
-  //   });
-
-  //   return this.http.post('https://public-api.wordpress.com/oauth2/authorize',data);
-  //   }
-
-  LoginUser():string{
-    return "https://public-api.wordpress.com/oauth2/authorize?client_id=66565&redirect_uri=https://localhost:4200/chat/16&response_type=code&blog=164354823";
-  }
-
-  setAuthToken(token:string){
-    this.clientAuthToken = token;
-  }
-  getAuthToken(){
-    return this.clientAuthToken;
-  }
-  setCodeToken(code:string){
-    this.authCode = code;
-  }
-  getAuthCode(){
-    return this.authCode;
-  }
-
-
-   getAuthenticationToken():Observable<any>{
-    const data = JSON.stringify({
-      "client_id":this.clientID,
-      "redirect_uri":"https://localhost:4200/login",
-      "code":this.authCode,
-      "grant_type":"authorization_code",
-    });
-
-    return this.http.post("https://public-api.wordpress.com/oauth2/token",data);
-
-   }
-
    getCategoriesWithNoParents():Observable<Category[]>{
     return this.http.get<Category[]>(this.wordpressAPI+"onDisplay?parent=0");
   }
@@ -106,35 +66,13 @@ export class LocalWordpressService {
    }
 
    getLabels():Observable<selectedLabels>{
-    return interval(10000).pipe(flatMap(()=>{
+    return interval(1000).pipe(flatMap(()=>{
       return this.http.get<selectedLabels>(this.wordpressAPI+"pages?slug=label-select");
     }));
    }
    getLabelByLabelID(id:number):Observable<smartLabel>{
      return this.http.get<smartLabel>(this.wordpressAPI+"label/"+id.toString());
    }
-
-  //  getPostsByCategories(isParentless:Boolean = false, categoryName?:String):Observable<Post[]>{
-  //   if(isParentless){
-  //     return this.http.get(this.wordpressAPI+'categories?parent=0').pipe(flatMap((categories:Category[])=>{
-  //       if(categories.length > 0){
-  //         return forkJoin(categories.map((category:Category)=>{
-  //           return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
-  //         }))
-  //       }
-  //     }))
-  //   }
-  //   if(!isParentless && categoryName!==""){
-  //     return this.http.get(this.wordpressAPI+'categories?slug=' + categoryName).pipe(flatMap((categories: Category[])=>{
-  //       if(categories.length > 0){
-  //         return forkJoin(categories.map((category:Category)=>{
-  //           return this.http.get(this.wordpressAPI+'posts?categories='+category.id)
-  //         }))
-
-  //       }
-  //     }))
-  //   }
-  // }
   getSubCategoriesOfCategoryID(categoryID:Number){
     return this.http.get<Category[]>(this.wordpressAPI+"onDisplay?parent="+categoryID);
   }
@@ -177,14 +115,6 @@ export class LocalWordpressService {
     console.log("MasterTag Level: ",this.MasterLevelTag);
 
    }
-
-
-
-  // getShowListObservable():Observable<Post[]>{
-  //   return this.getCategories().pipe(flatMap((category:any)=>{
-  //     return this.getPostsByCategoryID(294932)}));
-  // }
-
   
   //Get all the categories
   //fork and get multiple posts for each category id
@@ -249,39 +179,6 @@ export class LocalWordpressService {
     console.log("onDisplay With Same Parents: ",selectedCategories);
     return selectedCategories;
    }
-
-  //  getShowList(){
-  //    this.getCategories().subscribe((data)=>{
-  //      console.log("Testing Data",data);
-  //      var parentLessCategories = this.getCategoriesWithNoParents(data);
-  //      console.log("Getting Show info for each category")
-  //      var shows:Show[] = [];
-  //    parentLessCategories.forEach((category)=>{
-  //      //getting show info
-  //      this.getPostsByCategoryID(category.id).subscribe((postData)=>{
-  //       var hasPost:boolean = false;
-  //       console.log("Getting Post info for this category");
-  //       postData.forEach((post)=>{
-  //         //if any post has only count of 1 in categories return that id for show
-  //         if(post.categories.length === 1){
-  //           console.log("Post does not have any other categories")
-  //           hasPost = true;
-  //           shows.push(new Show(category.slug,category.id,post.id))
-  //         }
-  //       })
-  //       if(hasPost === false){
-  //         console.log("No posts are strictly this category")
-  //         shows.push(new Show(category.slug,category.id,0));
-  //       }
-  //       this.setObservedShow( of (shows));
-  //      });  
-  //    })
-  //   })
-  //  }
-
-   
-
-
 }
 
 

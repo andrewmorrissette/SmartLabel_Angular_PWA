@@ -13,38 +13,31 @@ import { map } from 'rxjs/operators';
 import {Observable} from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.less']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.less']
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,private wordpressAPI:LocalWordpressService,private auth:LocalAuthenticateService,private activatedRoute: ActivatedRoute, 
-    private router: Router,) { }
-
+    private router: Router) { }
   private hasCode:boolean = false;
   private hasToken:boolean = false;
   loginForm: FormGroup;
-    loading = false;
-    submitted = false;
-    returnUrl: string;
+  loading = false;
+  submitted = false;
+  returnUrl: string;
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
+
+      email: ['',Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required]
   });
   }
 
   get f() { return this.loginForm.controls; }
-
-  login(){
-    console.log(this.f.username.value);
-    console.log(this.f.password.value);
-    //var tempURL:string = this.auth.getCodeURL();
-    //window.location.href=tempURL;
-    //window.location.href='https://public-api.wordpress.com/oauth2/authorize?client_id=66565&redirect_uri=https://localhost:4200/chat/16&response_type=token&blog=164354823';
-  }
 
   onSubmit() {
     this.submitted = true;
@@ -55,21 +48,8 @@ export class LoginComponent implements OnInit {
         return;
     }
 
+    console.log(this.f.email.value);
     console.log(this.f.username.value);
     console.log(this.f.password.value);
-
-    this.auth.getAuthenticationToken(this.f.username.value,this.f.password.value).subscribe((response)=>{
-      console.log("Response",response);
-    })
   }
-
-  onRegister(){
-
-    if(this.loginForm.invalid){
-      return;
-    }
-
-    
-  }
-
 }
