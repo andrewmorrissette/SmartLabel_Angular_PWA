@@ -18,15 +18,10 @@ export class LocalWordpressService {
   //////////////////
   //////CHANGE//////
   //////////////////
-  private personalWordpressSite:string = "http://localhost/cultureconnect/"//"https://02911d53.ngrok.io/cultureconnect/"
-  //"testingsmartlabel.art.blog/"; //Change to your URL
-  private isPaid:boolean = true; //Are you paying for it to use plugins?
-  private blogID:string = "164354823"; //can get at https://public-api.wordpress.com/rest/v1.1/sites/$yourSite
-  private clientID:string = "66565" //Given after creating the application in developer.wordpress.com
-  private globalToken:string = "RZnbxraO4Z";
-  private clientSecretKey:string = "TMSblbnwAidBY5hld5S0rEyJUa7PFOY60uF3bsha4JoTNysYPfXby0ib49Z0v0oW";
-  private clientAuthToken:string = "";
-  private authCode:string = "";
+  private personalWordpressSite:string = "http://localhost/cultureconnect/"
+  //"testingsmartlabel.art.blog/"; //"http://localhost/cultureconnect/"
+  private authToken:string = "";
+
 
 
   //////////////////
@@ -34,7 +29,7 @@ export class LocalWordpressService {
   /////////////////
   private wordpressFreeAPIUrl:string ="https://public-api.wordpress.com/wp/v2/sites/"; //Required for Wordpress API to work (unless with paid site)
   private wordpressPaidAPIUrl:string ="wp-json/wp/v2/"; //Paid site doesn't need public-api, just wp-json/wp/v2 after their site url. 
-  private wordpressAPI:string=""; //FINAL URL Determined in constructor
+  private wordpressAPI:string="http://localhost/cultureconnect/wp-json/wp/v2/"; //FINAL URL Determined in constructor
 
   private MasterLevelTag="";
   private PersonalLevelTag="";
@@ -43,13 +38,13 @@ export class LocalWordpressService {
 
   
   constructor(private http:HttpClient) {
-    if(this.isPaid === false){
-      this.wordpressAPI = this.wordpressFreeAPIUrl + this.personalWordpressSite;
-    }
-    else{
-      this.wordpressAPI = this.personalWordpressSite + this.wordpressPaidAPIUrl;
-    }
-    
+   }
+
+   setAuthToken(token:string){
+     this.authToken=token;
+   }
+   getAuthToken():string{
+     return this.authToken;
    }
 
    getCategoriesWithNoParents():Observable<Category[]>{
@@ -78,8 +73,10 @@ export class LocalWordpressService {
   }
 
   getCommentsOfPostID(postID:Number){
+    console.log("Inside Service, post id: ",postID);
+    console.log(this.wordpressAPI + 'comments?post=' + postID.toString());
     return interval(1000).pipe(flatMap(()=>{
-      return this.http.get<Comment[]>(this.wordpressAPI + "comments?app_post=" + postID.toString());
+      return this.http.get<Comment[]>(this.wordpressAPI + "comments?post=" + postID.toString());
     }));
     //return this.http.get<Comment[]>(this.wordpressAPI + "comments?post=" + postID.toString());
   }
@@ -89,15 +86,16 @@ export class LocalWordpressService {
 
     //Code that worked: eDrnE2O0Y2h@tjq1E3T6QRV&1fDzMPLb0w*nSgIelaXKX46g@f23#N$L^jezsFIK
     let headers = new HttpHeaders({
-      'Authorization':'BEARER ' + this.clientAuthToken
+      'Content-Type' : 'application/json',
+      'Authorization':'Bearer ' + this.authToken
     });
-    console.log("Client Authentication",this.clientAuthToken);
+    console.log("Client Authentication",this.authToken);
     //headers.append('Authorization',"Bearer "+this.clientAuthToken);
     console.log("Headers",headers.has('Authorization'));
     let options = {headers:headers};
     console.log("Options",options.headers.getAll('Authorization'));
     console.log(this.http.post(this.wordpressAPI+"app_posts/"+PostID+"/replies/new",data,options),"API CALL");
-    return this.http.post(this.wordpressAPI+"comments?post="+PostID+"&content="+content,data,options);
+    return this.http.post(this.wordpressAPI+"comments?app_post="+PostID+"&content="+content,data,options);
 
     
   }

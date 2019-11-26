@@ -11,9 +11,11 @@
 </div>
 <div class="labelContent" *ngIf="showLabelContent">
   <mat-card class="featuredArt" class="center">
-    <img alt="Artwork image" class="mat-card-image" mat-card-image [src]="labelContent.acf.image.url"
-    [height] = "labelContent.acf.image.sizes['medium-height']" [width]="labelContent.acf.image.sizes['medium-width']" >
-    <mat-card-content>
+    <div *ngIf="hasImage">
+      <img  alt="Artwork image" class="artworkImage" mat-card-image [src]="labelContent.acf.image.url"
+      [height] = "labelContent.acf.image.sizes['medium-height']" [width]="labelContent.acf.image.sizes['medium-width']" >
+    </div>
+      <mat-card-content>
       <p class = "artistName">{{labelContent.acf.artist_name}}</p>
       <p class = "artistLocation">{{labelContent.acf.artist_location}}</p>
       <p class = "artistBirthYear">{{labelContent.acf.artist_birth_year}}</p>
@@ -33,8 +35,10 @@
     <img [src] = "labelContent.acf.qr_image.url" alt="QR Code" [height]= "labelContent.acf.qr_image.sizes['medium-height']"
     [width]="labelContent.acf.qr_image.sizes['medium-width']" *ngIf=hasQRCode>
   </div>
-  <button id=1 mat-raised-button class="exhibitContent" (click)="showLabels()">
-    Other Labels
-  </button>
+  <div class="center">
+    <button id=1 mat-raised-button class="exhibitContent" (click)="showLabels()">
+      Other Labels
+    </button>
+  </div>
   <br>
 </div>

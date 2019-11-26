@@ -38,6 +38,7 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
     id:string;
     showButtons:boolean = false;
     showLabelContent:boolean = false;
+    hasImage:boolean = false;
 
     private labelSelectionSubscription:SubscriptionLike;
 
@@ -88,7 +89,7 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
         this.videoHTML = this.sanitizeHTML(this.labelContent.acf.video); 
       }
 
-      if(this.labelContent.acf.audio != null){
+      if(this.labelContent.acf.audio != ""){
         console.log("Audio: ",this.labelContent.acf.audio);
         this.hasAudio = true;
         this.audioURL = this.sanitizeURL(this.labelContent.acf.audio);
@@ -97,6 +98,10 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
 
       if(this.labelContent.acf.qr_image != false){
         this.hasQRCode = true;
+      }
+
+      if(this.labelContent.acf.image != false){
+        this.hasImage = true;
       }
     })
   }

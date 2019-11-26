@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
-import {WordpressService} from '../../services/wordpress/wordpress.service';
+import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+//import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -18,7 +19,8 @@ import{Tag} from '../../models/wordpress/tags.model';
 import{Show} from '../../models/wordpress/showClass.model';
 import { reduce, catchError } from 'rxjs/operators';
 import {SubscriptionLike} from 'rxjs';
-import {AuthenticateService} from '../../services/wordpress/authenticate.service';
+//import {AuthenticateService} from '../../services/wordpress/authenticate.service';
+import {LocalAuthenticateService} from '../../services/localWordpress/authenticate.service';
 
 
 @Component({
@@ -36,11 +38,11 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient, 
     private sanitizer: DomSanitizer, 
-    private wordpressAPI:WordpressService,
+    private wordpressAPI:LocalWordpressService,
     private _route: Router,
     private _router: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private auth:AuthenticateService
+    private auth:LocalAuthenticateService
   ) { }
 
   private currentComments: Comment[]=[];
@@ -67,9 +69,11 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
       this.isLoggedIn=true;
     }
     let postID:string = this._router.snapshot.paramMap.get("id")
+    console.log("Post ID: ",postID);
     if(postID != null && postID!==""){
       this.postID = postID;
       this.postSubscription = this.wordpressAPI.getPostByPostID(Number(postID)).subscribe((post)=>{
+        console.log("Post Pulled up:",post);
         this.currentPost = post;
         this.commentSubscription = this.wordpressAPI.getCommentsOfPostID(Number(postID)).subscribe((allComments=>{
           var postComments = allComments;
@@ -130,9 +134,7 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
     var newComment:Comment;
 
     const data = JSON.stringify({
-      "author":"0",
-      "author_name":"",
-      "author_url":"",
+
       "content":this.message,
       "date": new Date(),
       "date_gmt": new Date().toUTCString,

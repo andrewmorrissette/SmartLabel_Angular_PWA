@@ -42,13 +42,32 @@ export class LocalAuthenticateService {
      this.token = tok;
    }
 
-   registerUser(username:string,email:string,password:string){
+   registerUser(username:string,email:string,password:string):Observable<any>{
      const body = new HttpParams()
       .set('username',username)
-      .set('password',password)
-      .set('email',email);
+      .set('email',email)
+      .set('password',password);
 
-    return this.http.post
+    const userLogin = {
+      "username":username,
+      "password":password,
+      "email":email
+    }
+
+    const headerDict = {
+      'Content-Type': 'application/json',
+      "username":username,
+      "password":password,
+      "email":email
+    }
+      
+    // const requestOptions = {                                                                                                                                                                                 
+    //   headers: new HttpHeaders(headerDict), 
+    // };
+
+  
+      
+      return this.http.post("http://localhost/cultureconnect/wp-json/wp/v2/users/register",headerDict);
    }
 }
 

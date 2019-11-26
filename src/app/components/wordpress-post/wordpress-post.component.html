@@ -18,9 +18,14 @@
   </mat-card-content>
 </mat-card> 
 <div class="center">
-    <audio [src] = "audioURL" controls></audio>
+    <audio *ngIf = "hasAudio" [src] = "audioURL" controls></audio>
 </div>
 <div class ="center" [innerHTML] = "innerHTML"></div>
+
+<div *ngIf = "hasAR" style="display:flex; margin:3em auto; flex-direction: column; max-width:400px; overflow:hidden;">
+  <model-viewer style="width:100%" class="model"  [src]="AR.android" [ios-src]="AR.ios" [alt]="AR.alt" background-color="#70BCD1" shadow-intensity="1" camera-controls="" interaction-prompt="auto" auto-rotate="" ar="" magic-leap=""></model-viewer>
+</div>
+
 <div class ="center" [innerHTML] = "videoHTML"></div>
 <p class="center" *ngIf="subCategories.length!==0"><b>Exhibits Within Collection</b></p>
 <div class="center" *ngFor="let category of subCategories">

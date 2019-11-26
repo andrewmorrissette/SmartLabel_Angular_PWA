@@ -42,6 +42,9 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     audioURL: SafeUrl;
     subCategories:Category[]=[];
     hasObjects : boolean = false;
+    hasAR:boolean = false;
+    hasAudio:boolean = false;
+    AR={'ios':"",'android':"",'alt':"",}
     id:string;
     
 
@@ -56,10 +59,20 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     this.wordpressAPI.getPostByPostID(Number(id)).subscribe((post)=>{
       console.log("Post: ",post);
       this.post = post;
-      //this.evaluateHTML();
       this.innerHTML = this.sanitizeHTML(this.post.acf.content); 
       this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
-      this.audioURL = this.sanitizeURL(this.post.acf.audio);
+      
+
+      //AR
+      this.AR = {'ios':this.post.acf.ios_source,'android':this.post.acf.source,'alt':this.post.acf.alt_text};
+      if(this.AR.ios != "" || this.AR.android != ""){
+        console.log("Has AR");
+        this.hasAR=true;
+      }
+      if(this.post.acf.audio != ""){
+        this.audioURL = this.sanitizeURL(this.post.acf.audio);
+        this.hasAudio = true;
+      }
 
       console.log("VideoHTML: ",this.videoHTML);
 
@@ -93,7 +106,12 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       //this.evaluateHTML();
       this.innerHTML = this.sanitizeHTML(this.post.acf.content);  
       this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
-      this.audioURL = this.sanitizeURL(this.post.acf.audio);
+      
+      if(this.post.acf.audio != ""){
+        this.audioURL = this.sanitizeURL(this.post.acf.audio);
+        this.hasAudio = true;
+      }
+
       console.log("VideoHTML: ",this.videoHTML);
       if(parentCategory !== null && parentCategory !== ""){
         console.log("Checking for categories");
@@ -122,85 +140,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     if (this.navigationSubscription) {  
        this.navigationSubscription.unsubscribe();
     }
-  }
-
-  evaluateHTML(){
-      //Add functions to here for each type needing to change
-       //console.log("Evaluating HTML");
-       var conversionTypeWanted:string = "3D";
-       var conversionArray:string[]=[];
-       conversionArray=this.lookForTag(conversionTypeWanted);
-       //console.log("Converted String",conversionArray);
-       var tempText = this.post.acf.content;
-       //console.log("Are they different",[conversionArray[0],this.post.content.rendered]);
-       
-       if(conversionArray[0][0]==="<"&&conversionArray[0][1]==="a"){
-        this.post.acf.content = tempText.replace(conversionArray[0],this.replacementTag([conversionTypeWanted,conversionArray[1]]));
-       }
-       //console.log("After Conversion Post",this.post);
-  }
-
-  lookForTag(type:string):string[]{
-    if(type === "3D"){
-      var characterizedString:string="";
-      var href:string="";
-      var count:number = 0;
-      var bracketCount:number=0;
-      for(let character of this.post.acf.content){
-        count++;
-
-        //console.log("Debugging ending",character,bracketCount,characterizedString.substring(10,12));
-        if(characterizedString[0] === "<" && characterizedString[1] === "a"){
-          //console.log("current string",characterizedString);
-          //console.log("Character, ",character);
-          if(characterizedString.substring(10,12)==="3D" && count>=20 && character !== '"'){
-            characterizedString = characterizedString+character;
-            href = href + character;
-            if(character===">" ){
-              //console.log("Adding Bracket");
-              bracketCount=bracketCount+1;
-            }
-          }
-          else if(character===">" ){
-            //console.log("Adding Bracket");
-            characterizedString = characterizedString+character;
-            bracketCount=bracketCount+1;
-          }
-          
-          else if(character===">"&& bracketCount===2 && characterizedString.substring(10,12)==="3D"){
-            return [characterizedString,href];
-          }
-          else if(character === " "){
-            characterizedString = characterizedString+character;
-          }
-          else{
-            characterizedString = characterizedString + character;
-          }
-        }
-        if(character === "a" && characterizedString === "<"){
-          characterizedString = characterizedString + character;
-        }
-        else if(character === "<" && characterizedString.substring(10,12)!=="3D"){
-          //console.log("Debug",characterizedString.substring(10,12));
-          characterizedString =  character;
-          bracketCount = 0;
-        }
-        if(character===">"&& bracketCount===2 && characterizedString.substring(10,12)==="3D"){
-          return [characterizedString,href.slice(6,href.length-5)];
-        }
-      }
-    }
-    return ["",""];
-  }
-
-  replacementTag(type:string[]):string{
-    //console.log("Testing",type);
-    if(type[0] === "3D"){
-      //console.log("Inside");
-      var newTag = '<div style="display:flex; margin:3em auto; flex-direction: column; max-width:400px; overflow:hidden;"><model-viewer style="width:100%" class="model" *ngIf="hasModel()"src="'+type[1]+'" ios-src="assets/Astronaut.usdz" alt="A 3D model of an astronaut" background-color="#70BCD1" shadow-intensity="1" camera-controls="" interaction-prompt="auto" auto-rotate="" ar="" magic-leap=""></model-viewer></div>'
-      return newTag;
-    }
-    return "";
   }
 
   sanitizeHTML(text:string){

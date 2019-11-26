@@ -11,6 +11,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 
 import {Observable} from 'rxjs';
+import { database } from 'firebase';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ import {Observable} from 'rxjs';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder,private wordpressAPI:LocalWordpressService,private auth:LocalAuthenticateService,private activatedRoute: ActivatedRoute, 
+  constructor(private formBuilder: FormBuilder,private wordpressAPI:LocalWordpressService,private auth:LocalAuthenticateService,private _route: Router, 
     private router: Router,) { }
 
   private hasCode:boolean = false;
@@ -60,6 +61,15 @@ export class LoginComponent implements OnInit {
 
     this.auth.getAuthenticationToken(this.f.username.value,this.f.password.value).subscribe((response)=>{
       console.log("Response",response);
+      if(response.token != null && response.token != "" && response.token != undefined){
+        this.auth.setToken(response.token);
+        console.log(this.auth.getToken(),"Token Saved");
+        this._route.navigate(['/home/']);
+
+      }
+    },
+    (error)=>{
+      console.log("Error",error);
     })
   }
 
