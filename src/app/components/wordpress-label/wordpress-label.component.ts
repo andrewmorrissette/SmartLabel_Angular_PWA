@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
-import { Router,NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
 //import {WordpressService} from '../../services/wordpress/wordpress.service';
-import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import { Post } from 'src/app/models/localWordpressModels/post.model';
 import {selectedLabels} from 'src/app/models/localWordpressModels/selectedlabels.model';
 import {smartLabel} from 'src/app/models/localWordpressModels/smartLabel.model';
@@ -15,8 +15,6 @@ import {SubscriptionLike} from 'rxjs';
   styleUrls: ['./wordpress-label.component.less']
 })
 export class WordpressLabelComponent implements OnInit,AfterContentInit {
-
-  navigationSubscription;
 
   constructor(
     private _router: ActivatedRoute, 
@@ -51,6 +49,9 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
         
         console.log("Selected Label Post: ",selectedLabels[0]);
         console.log("id: ", selectedLabels[0].acf["smart-label-1"])
+
+        //Will need to define all smart labels here to push too. 
+        //(Possibly need a file to define them/pulls from WP?)
         this.labels.push(selectedLabels[0].acf["smart-label-1"]);
         this.labels.push(selectedLabels[0].acf["smart-label-2"]);
       });
@@ -115,12 +116,6 @@ export class WordpressLabelComponent implements OnInit,AfterContentInit {
     var temp = this.sanitizer.bypassSecurityTrustUrl(text);
     return temp;
   }
-
-  // checkSubCategories(id:string){
-  //   this.wordpressAPI.getSubCategoriesOfCategoryID(Number(id)).subscribe((children)=>{
-  //     this.subCategories = children;
-  //   })
-  // }
 
   chatClicked(){
     this._route.navigate(['/chat/',this.id]);

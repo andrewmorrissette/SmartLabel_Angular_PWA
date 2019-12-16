@@ -1,5 +1,7 @@
+//Not used?
+
 import { Component, OnInit, Input } from '@angular/core';
-import {Comment} from '../../models/wordpress/comment.model';
+import {Comment} from '../../models/localWordpressModels/comment.model';
 
 @Component({
   selector: 'app-wordpress-comment',

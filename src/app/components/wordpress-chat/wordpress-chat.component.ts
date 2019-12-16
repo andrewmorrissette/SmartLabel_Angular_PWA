@@ -1,23 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer} from '@angular/platform-browser';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
-//import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { map } from 'rxjs/operators';
 
-import {Observable, VirtualTimeScheduler} from 'rxjs';
+import {Observable} from 'rxjs';
 
-
-import {Category} from '../../models/wordpress/category.model';
-import {Comment} from '../../models/wordpress/comment.model';
-import{Post} from '../../models/wordpress/post.model';
-import{Tag} from '../../models/wordpress/tags.model';
-import{Show} from '../../models/wordpress/showClass.model';
-import { reduce, catchError } from 'rxjs/operators';
+import {Comment} from '../../models/localWordpressModels/comment.model';
+import{Post} from '../../models/localWordpressModels/post.model';
 import {SubscriptionLike} from 'rxjs';
 //import {AuthenticateService} from '../../services/wordpress/authenticate.service';
 import {LocalAuthenticateService} from '../../services/localWordpress/authenticate.service';
@@ -36,8 +30,6 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
   );
   
   constructor(
-    private http: HttpClient, 
-    private sanitizer: DomSanitizer, 
     private wordpressAPI:LocalWordpressService,
     private _route: Router,
     private _router: ActivatedRoute,

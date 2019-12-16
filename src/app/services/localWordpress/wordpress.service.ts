@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient,HttpHeaders} from '@angular/common/http';
-import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import {Observable, of, forkJoin,interval} from 'rxjs';
 import {map,mergeMap, flatMap} from 'rxjs/operators';
 
-import {Category} from '../../models/wordpress/category.model';
-import {Comment} from '../../models/wordpress/comment.model';
+import {Category} from '../../models/localWordpressModels/category.model';
+import {Comment} from '../../models/localWordpressModels/comment.model';
 import{Post} from '../../models/localWordpressModels/post.model';
-import{Tag} from '../../models/wordpress/tags.model';
+import{Tag} from '../../models/localWordpressModels/tags.model';
 import {selectedLabels} from 'src/app/models/localWordpressModels/selectedlabels.model';
 import {smartLabel} from 'src/app/models/localWordpressModels/smartLabel.model';
 @Injectable({
@@ -27,13 +26,10 @@ export class LocalWordpressService {
   //////////////////
   //DO NOT CHANGE///
   /////////////////
-  private wordpressFreeAPIUrl:string ="https://public-api.wordpress.com/wp/v2/sites/"; //Required for Wordpress API to work (unless with paid site)
-  private wordpressPaidAPIUrl:string ="wp-json/wp/v2/"; //Paid site doesn't need public-api, just wp-json/wp/v2 after their site url. 
+
   private wordpressAPI:string="http://localhost/cultureconnect/wp-json/wp/v2/"; //FINAL URL Determined in constructor
 
-  private MasterLevelTag="";
-  private PersonalLevelTag="";
-  
+  private MasterLevelTag="";  
 
 
   

@@ -4,11 +4,6 @@ import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platf
 import {Observable, of, forkJoin,interval} from 'rxjs';
 import {map,mergeMap, flatMap} from 'rxjs/operators';
 
-import {Category} from '../../models/wordpress/category.model';
-import {Comment} from '../../models/wordpress/comment.model';
-import{Post} from '../../models/wordpress/post.model';
-import{Tag} from '../../models/wordpress/tags.model';
-import{Show} from '../../models/wordpress/showClass.model';
 import { stringify } from '@angular/compiler/src/util';
 import { keyframes } from '@angular/animations';
 

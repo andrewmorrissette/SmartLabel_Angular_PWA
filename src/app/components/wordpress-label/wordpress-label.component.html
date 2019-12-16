@@ -11,18 +11,19 @@
 </div>
 <div class="labelContent" *ngIf="showLabelContent">
   <mat-card class="featuredArt" class="center">
-    <div *ngIf="hasImage">
-      <img  alt="Artwork image" class="artworkImage" mat-card-image [src]="labelContent.acf.image.url"
-      [height] = "labelContent.acf.image.sizes['medium-height']" [width]="labelContent.acf.image.sizes['medium-width']" >
-    </div>
+    
       <mat-card-content>
-      <p class = "artistName">{{labelContent.acf.artist_name}}</p>
-      <p class = "artistLocation">{{labelContent.acf.artist_location}}</p>
-      <p class = "artistBirthYear">{{labelContent.acf.artist_birth_year}}</p>
-      <p class = "artworkTitle">{{labelContent.acf.artwork_title}}</p>
-      <p class = "artworkYear">{{labelContent.acf.artwork_year}}</p>
-      <p class = "artworkMaterials">{{labelContent.acf.artwork_materials}}</p>
-      <p class = "acknowledgements">{{labelContent.acf.acknowledgements}}</p>
+      <p class = "artistName p1" >{{labelContent.acf.artist_name}}</p>
+      <p class = "artistLocation p2">{{labelContent.acf.artist_location}}</p>
+      <p class = "artistBirthYear p2">{{labelContent.acf.artist_birth_year}}</p>
+      <p class = "artworkTitle p3">{{labelContent.acf.artwork_title}}</p>
+      <p class = "artworkYear p1">{{labelContent.acf.artwork_year}}</p>
+      <p class = "artworkMaterials p2">{{labelContent.acf.artwork_materials}}</p>
+      <p class = "acknowledgements p2">{{labelContent.acf.acknowledgements}}</p>
+      <div *ngIf="hasImage">
+          <img  alt="Artwork image" class="artworkImage" mat-card-image [src]="labelContent.acf.image.url"
+          [height] = "labelContent.acf.image.sizes['medium-height']" [width]="labelContent.acf.image.sizes['medium-width']" >
+        </div>
       <div class="center" *ngIf="hasAudio">
           <audio [src] = "audioURL" controls ></audio>
       </div>

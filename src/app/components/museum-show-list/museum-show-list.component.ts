@@ -1,20 +1,12 @@
-import { Component, OnInit, OnChanges, AfterContentInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
-//import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
-import {Observable} from 'rxjs';
-
-
-import {Category} from '../../models/wordpress/category.model';
-import {Comment} from '../../models/wordpress/comment.model';
-import{Post} from '../../models/wordpress/post.model';
-import{Tag} from '../../models/wordpress/tags.model';
-import{Show} from '../../models/wordpress/showClass.model';
-import { reduce, catchError } from 'rxjs/operators';
+import {Category} from '../../models/localWordpressModels/category.model';
+import{Post} from '../../models/localWordpressModels/post.model';
+import{Show} from '../../models/localWordpressModels/showClass.model';
 
 @Component({
   selector: 'app-museum-show-list',
@@ -24,19 +16,18 @@ import { reduce, catchError } from 'rxjs/operators';
 export class MuseumShowListComponent implements OnInit {
 
   constructor(private http: HttpClient, 
-    private sanitizer: DomSanitizer, 
     private wordpressAPI:LocalWordpressService,
     private _route: Router,
     private _router: ActivatedRoute,) { }
   Posts:Post[];
-  currentShows:Show[]
   currentCategories:Category[]
-  newCategories:Category[] = [];
-  testBool:boolean = false;
 
   ngOnInit() {
-    let parentCategory:string = this._router.snapshot.paramMap.get("category");
+    //Due to using this component dynamically when exhibits are being explored
+    //check to see first if a category has been clicked
+    //If not display all of the Categories in Wordpress.
 
+    let parentCategory:string = this._router.snapshot.paramMap.get("category");
     if(parentCategory !== null && parentCategory !== ""){
       this.wordpressAPI.getSubCategoriesOfCategoryID(Number(parentCategory)).subscribe((categories)=>{
         this.currentCategories = categories;
@@ -44,7 +35,6 @@ export class MuseumShowListComponent implements OnInit {
     }
     else{
       this.wordpressAPI.getCategoriesWithNoParents().subscribe((data)=>{
-        //console.log("Categories with no parents",data);
         this.currentCategories = data;
         var sortedCategories: Category[] = []
         for(var post of this.currentCategories){
@@ -55,38 +45,23 @@ export class MuseumShowListComponent implements OnInit {
         this.currentCategories = sortedCategories;
       })
     }
-    
-  }
-
-  evaluateHTML(){
-    for(let post in this.Posts){
-      //console.log("Posts: ",this.Posts);
-      //console.log("post: ", post);
-    }
-  }
-
-  sanitizeHTML(text:string){
-    var temp = this.sanitizer.bypassSecurityTrustHtml(text);
-    return temp;
-  }
-
-  onClickInformation(show:Show){
-    if(show.showPostID != 0){
-      this._route.navigate(['/wpExhibit/',show.showPostID]);
-    }
   }
 
   onClick(id:number){
-    console.log("ID CLICKED: ",id);
+    //Determine if Category has sub posts to display (Show -> Exhibits)
+    //If not, determine post that belongs to category and route to post component
+    //TODO: Optimise and think of better ways of doing this task
+    //TODO: Variable Name Clarity (MasterPost?)
     this.wordpressAPI.getSubCategoriesOfCategoryID(id).subscribe((children)=>{
-      console.log("Chillens",children);
       if(children.length===0){
-        console.log("ID: ",id);
         this.wordpressAPI.getPostsByCategoryID(id).subscribe((posts)=>{
-          console.log("Going to route", posts);
           this._route.navigate(['/wpExhibit/',posts[0].id]);
         })
       }
+      
+      //The category gives you all of the posts within that entire directory. 
+      //Algorithm determines if post is a sub directory within one more step of the tree
+      //If it is only directly related with the Category we clicked, display that name
       else{
         var subCategories:Category[]=children;
         var subCategoriesArray:number[]=[];
@@ -100,8 +75,6 @@ export class MuseumShowListComponent implements OnInit {
           var hasMasterPost:number[]=[];
           var hasNextPost:number[]=[];
           for(var post of posts){
-            // let displayCount = post.onDisplay;
-            // let displayCount2 = displayCount.values.length;
             console.log(post,"On Display Post");
             if(post.ondisplay.values.length !== subCategoriesArray.length+1){
               var tempCatIDs:number[]=[];
@@ -114,7 +87,6 @@ export class MuseumShowListComponent implements OnInit {
               if(tempCatIDs.length===1){
                 console.log("Going to route");
                 hasNextPost.push(post.id,id);
-                //this._route.navigate(['/wpExhibit/',post.id,id]);
               }
               else if(tempCatIDs.length===0){
                 hasMasterPost.push(post.id,id);
@@ -134,10 +106,6 @@ export class MuseumShowListComponent implements OnInit {
           
         })
       }
-      
-
-      //Might not work
-      
     })
   }
 }

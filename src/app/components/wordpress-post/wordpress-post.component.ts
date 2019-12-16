@@ -1,17 +1,12 @@
 import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { Exhibit } from 'src/app/models/exhibit.model';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
 //import {WordpressService} from '../../services/wordpress/wordpress.service';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
-import { Pipe, PipeTransform } from '@angular/core';
-import { SecurityContext } from '@angular/core';
 import { Post } from 'src/app/models/localWordpressModels/post.model';
-import { stringify } from 'querystring';
-import { Category } from 'src/app/models/wordpress/category.model';
+import { Category } from 'src/app/models/localWordpressModels/category.model';
 import {Location} from '@angular/common';
-import { SafeURLPipe } from 'src/app/pipes/safe-url.pipe';
 @Component({
   selector: 'app-wordpress-post',
   templateUrl: './wordpress-post.component.html',
@@ -86,8 +81,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
             this.hasObjects = true;
           }
         })
-
-        // this.checkSubCategories(parentCategory);
       }
     })
     }
@@ -103,7 +96,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       console.log("Post: ",post);
       this.post = post;
       
-      //this.evaluateHTML();
       this.innerHTML = this.sanitizeHTML(this.post.acf.content);  
       this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
       
@@ -123,8 +115,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
             this.hasObjects = true;
           }
         })
-
-        // this.checkSubCategories(parentCategory);
       }
     })
   }
@@ -151,12 +141,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     var temp = this.sanitizer.bypassSecurityTrustUrl(text);
     return temp;
   }
-
-  // checkSubCategories(id:string){
-  //   this.wordpressAPI.getSubCategoriesOfCategoryID(Number(id)).subscribe((children)=>{
-  //     this.subCategories = children;
-  //   })
-  // }
 
   onSubCategoryClick(id:number){
     console.log("I've been clicked");
@@ -185,14 +169,11 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
           if(tempCatIDs.length===1){
             console.log("Going to route");
             hasNextPost.push(post.id,id);
-            //this._route.navigate(['/wpExhibit/',post.id,id]);
           }
           else if(tempCatIDs.length===0){
             hasMasterPost.push(post.id,id);
           }
         }
-
-        //this._route.navigate(['/wpExhibit/',post.id,id]); //could be wrong
       }
       if(hasMasterPost.length!==0){
         this._route.navigate(['/wpExhibit/',hasMasterPost[0],hasMasterPost[1]]);
@@ -203,8 +184,6 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
       else{
       console.log("Should display subCategories");
       this._route.navigate(['/home/',id]);
-
-      //this.currentCategories = subCategories;
       }
     })
   }
