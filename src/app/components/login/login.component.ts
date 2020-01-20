@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,private wordpressAPI:LocalWordpressService,private auth:LocalAuthenticateService,private _route: Router) { }
 
-  
+  public hasToken:false;
 
   loginForm: FormGroup;
     loading = false;

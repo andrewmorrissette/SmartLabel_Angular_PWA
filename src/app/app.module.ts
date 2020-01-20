@@ -21,7 +21,8 @@ import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, Mat
 import { WordpressCommentComponent } from './components/wordpress-comment/wordpress-comment.component';
 import {LoginComponent} from './components/login/login.component';
 import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component';
-import { RegisterComponent } from './components/register/register.component'
+import { RegisterComponent } from './components/register/register.component';
+import { WordpressNewLabelComponent } from './components/wordpress-new-label/wordpress-new-label.component'
 
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
@@ -35,7 +36,8 @@ const appRoutes: Routes = [
     {path: 'login',component:LoginComponent},
     {path: 'label',component:WordpressLabelComponent},
     {path: 'label/:id',component:WordpressLabelComponent},
-    {path: 'register',component:RegisterComponent}
+    {path: 'register',component:RegisterComponent},
+    {path: 'newLabel',component:WordpressNewLabelComponent}
     
 ];
 
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
     WordpressCommentComponent,
     LoginComponent,
     WordpressLabelComponent,
-    RegisterComponent
+    RegisterComponent,
+    WordpressNewLabelComponent
 
   ],
   imports: [

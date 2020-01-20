@@ -9,6 +9,10 @@ import{Post} from '../../models/localWordpressModels/post.model';
 import{Tag} from '../../models/localWordpressModels/tags.model';
 import {selectedLabels} from 'src/app/models/localWordpressModels/selectedlabels.model';
 import {smartLabel} from 'src/app/models/localWordpressModels/smartLabel.model';
+import {newLabel} from 'src/app/models/localWordpressModels/newLabel.model';
+import {Artwork} from 'src/app/models/localWordpressModels/artwork.model';
+import {extendedLabel} from 'src/app/models/localWordpressModels/extendedLabel.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +21,7 @@ export class LocalWordpressService {
   //////////////////
   //////CHANGE//////
   //////////////////
-  private personalWordpressSite:string = "http://localhost/cultureconnect/"
+  private personalWordpressSite:string = "http://culturalnexus.msu.edu/wordpress"
   //"testingsmartlabel.art.blog/"; //"http://localhost/cultureconnect/"
   private authToken:string = "";
 
@@ -27,7 +31,7 @@ export class LocalWordpressService {
   //DO NOT CHANGE///
   /////////////////
 
-  private wordpressAPI:string="http://localhost/cultureconnect/wp-json/wp/v2/"; //FINAL URL Determined in constructor
+  private wordpressAPI:string="http://culturalnexus.msu.edu/wordpress/wp-json/wp/v2/"; //FINAL URL Determined in constructor
 
   private MasterLevelTag="";  
 
@@ -61,8 +65,17 @@ export class LocalWordpressService {
       return this.http.get<selectedLabels>(this.wordpressAPI+"pages?slug=label-select");
     }));
    }
+   getNewLabel():Observable<newLabel>{
+    return this.http.get<newLabel>(this.wordpressAPI+"labels2?id=485");
+   }
+   getExtendedLabel(id:number):Observable<extendedLabel>{
+     return this.http.get<extendedLabel>(this.wordpressAPI+"extended/"+id.toString());
+   }
    getLabelByLabelID(id:number):Observable<smartLabel>{
      return this.http.get<smartLabel>(this.wordpressAPI+"label/"+id.toString());
+   }
+   getArtworkByArtworkID(id:number):Observable<Artwork>{
+     return this.http.get<Artwork>(this.wordpressAPI+"artwork?id="+id.toString());
    }
   getSubCategoriesOfCategoryID(categoryID:Number){
     return this.http.get<Category[]>(this.wordpressAPI+"onDisplay?parent="+categoryID);

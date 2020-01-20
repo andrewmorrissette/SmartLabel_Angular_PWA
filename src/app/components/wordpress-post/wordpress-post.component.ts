@@ -22,12 +22,12 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     private wordpressAPI: LocalWordpressService,
     private sanitizer:DomSanitizer,
     private _location: Location) { 
-      this.navigationSubscription = this._route.events.subscribe((e: any) => {
-        // If it is a NavigationEnd event re-initalise the component
-        if (e instanceof NavigationEnd) {
-          this.initialiseInvites();
-        }
-      });
+      // this.navigationSubscription = this._route.events.subscribe((e: any) => {
+      //   // If it is a NavigationEnd event re-initalise the component
+      //   if (e instanceof NavigationEnd) {
+      //     this.initialiseInvites();
+      //   }
+      // });
     }
     
 
@@ -43,47 +43,47 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     id:string;
     
 
-    initialiseInvites() {
-      // Set default values and re-fetch any data you need.
-      let id = this._router.snapshot.paramMap.get('id');
-      this.id = id;
-    let parentCategory:string = this._router.snapshot.paramMap.get("category");
+    // initialiseInvites() {
+    //   // Set default values and re-fetch any data you need.
+    //   let id = this._router.snapshot.paramMap.get('id');
+    //   this.id = id;
+    // let parentCategory:string = this._router.snapshot.paramMap.get("category");
     
     
-    console.log("SubCategories: ",this.subCategories);
-    this.wordpressAPI.getPostByPostID(Number(id)).subscribe((post)=>{
-      console.log("Post: ",post);
-      this.post = post;
-      this.innerHTML = this.sanitizeHTML(this.post.acf.content); 
-      this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
+    // console.log("SubCategories: ",this.subCategories);
+    // this.wordpressAPI.getPostByPostID(Number(id)).subscribe((post)=>{
+    //   console.log("Post: ",post);
+    //   this.post = post;
+    //   this.innerHTML = this.sanitizeHTML(this.post.acf.content); 
+    //   this.videoHTML = this.sanitizeHTML(this.post.acf.video); 
       
 
-      //AR
-      this.AR = {'ios':this.post.acf.ios_source,'android':this.post.acf.source,'alt':this.post.acf.alt_text};
-      if(this.AR.ios != "" || this.AR.android != ""){
-        console.log("Has AR");
-        this.hasAR=true;
-      }
-      if(this.post.acf.audio != ""){
-        this.audioURL = this.sanitizeURL(this.post.acf.audio);
-        this.hasAudio = true;
-      }
+    //   //AR
+    //   this.AR = {'ios':this.post.acf.ios_source,'android':this.post.acf.source,'alt':this.post.acf.alt_text};
+    //   if(this.AR.ios != "" || this.AR.android != ""){
+    //     console.log("Has AR");
+    //     this.hasAR=true;
+    //   }
+    //   if(this.post.acf.audio != ""){
+    //     this.audioURL = this.sanitizeURL(this.post.acf.audio);
+    //     this.hasAudio = true;
+    //   }
 
-      console.log("VideoHTML: ",this.videoHTML);
+    //   console.log("VideoHTML: ",this.videoHTML);
 
-      if(parentCategory !== null && parentCategory !== ""){
-        console.log("Checking for categories");
-        console.log("ParentCategory",parentCategory);
-        this.wordpressAPI.getSubCategoriesOfCategoryID(Number(parentCategory)).subscribe((children)=>{
-          console.log("Children",children);
-          this.subCategories = children;
-          if(this.subCategories.length!==0){
-            this.hasObjects = true;
-          }
-        })
-      }
-    })
-    }
+    //   if(parentCategory !== null && parentCategory !== ""){
+    //     console.log("Checking for categories");
+    //     console.log("ParentCategory",parentCategory);
+    //     this.wordpressAPI.getSubCategoriesOfCategoryID(Number(parentCategory)).subscribe((children)=>{
+    //       console.log("Children",children);
+    //       this.subCategories = children;
+    //       if(this.subCategories.length!==0){
+    //         this.hasObjects = true;
+    //       }
+    //     })
+    //   }
+    // })
+    // }
     
 
   ngOnInit() {
@@ -119,7 +119,7 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
     })
   }
   ngAfterContentInit(){
-    console.log("POSTS: ",this.post);
+    // console.log("POSTS: ",this.post);
     
   }
 

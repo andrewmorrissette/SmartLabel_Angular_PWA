@@ -38,17 +38,17 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
   ) { }
 
   private currentComments: Comment[]=[];
-  private answeredComments: Comment[]=[];
-  private displayQuestions: boolean=false;
+  public answeredComments: Comment[]=[];
+  public displayQuestions: boolean=false;
   private message:string;
   private messageInput:string;
   private postID:string;
   private token:string = "";
   private commentSubscription:SubscriptionLike;
   private postSubscription:SubscriptionLike;
-  private currentPost: Post;
-  private isLoggedIn:boolean = false;
-  private isUnderQA = false;
+  public currentPost: Post;
+  public isLoggedIn:boolean = false;
+  public isUnderQA = false;
   private isSpecificPost = false;
 
   ngOnInit() {
