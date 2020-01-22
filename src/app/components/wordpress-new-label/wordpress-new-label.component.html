@@ -1,36 +1,79 @@
-<div class="artwork">
-    <!--Add functionality of displaying image of artwork with label?-->
-</div>
 
-<div class="Tombstone" *ngIf="currentArtwork!=null">
-    <p class="artist">{{currentArtwork.acf.artist}}</p>
-    <p class="artistYear">{{currentArtwork.acf.artist_year}}</p>
-    <p class="artistLocation">{{currentArtwork.acf.artist_location}}</p>
-    <p class="artworkTitle">{{currentArtwork.acf.artwork_title}}</p>
-    <p class="artworkYear">{{currentArtwork.acf.artwork_year}}</p>
-    <p class="materials">{{currentArtwork.acf.materials}}</p>
-    <p class="acknowledgements">{{currentArtwork.acf.acknowledgements}}</p>
-</div>
+   <div class="label">
 
-<div class="arrow" *ngIf="false">
-    <!--
-        toDo: Create arrow that will hide tombstone information and show the main content
-    -->
-</div>
+        <div class="Tombstone" *ngIf="currentArtwork!=null && hideTombstone ==false">
+    
+            <p class="p1" class="artist">{{currentArtwork.acf.artist}}</p>
+            <!-- artist name-->
+            <p class="p2" class="artistYear">{{currentArtwork.acf.artist_year}}</p>
+            <!-- birth/ death year -->
+            
+            <br>
+            <!-- empty line -->
 
-<div class ="labelContent" *ngIf="currentLabel!=null">
-    <span *ngIf="currentLabel.acf.firstBody != null">{{currentLabel.acf.firstBody}}</span>
-    <a class="extendedLink" *ngIf="extendedLabel1 != null" (click)="onExtension(extendedLabel1)">{{extendedLabel1.title.rendered}}</a>
-    <span *ngIf="currentLabel.acf.secondBody != null">{{currentLabel.acf.secondBody}}</span>
-    <a class="extendedLink" *ngIf="extendedLabel2!= null" (click)="onExtension(extendedLabel2)">{{extendedLabel2.title.rendered}}</a>
-    <span *ngIf="currentLabel.acf.thirdBody != null">{{currentLabel.acf.thirdBody}}</span>
-    <a class="extendedLink" *ngIf="extendedLabel3 != null" (click)="onExtension(extendedLabel3)">{{extendedLabel3.title.rendered}}</a>
-    <span *ngIf="currentLabel.acf.fourthBody != null">{{currentLabel.acf.fourthBody}}</span>
-    <a class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
-    <span *ngIf="currentLabel.acf.additionalContent != null">{{currentLabel.acf.additionalContent}}</span>
-</div>
+            <p class="p3" class="artworkTitle">{{currentArtwork.acf.artwork_title}}</p>
+            <!-- title of art -->
+            <p class="p3" class="artworkYear">{{currentArtwork.acf.artwork_year}}</p>
+            <!-- date -->
+            <p class="p2"  class="artistLocation">{{currentArtwork.acf.artist_location}}</p>
+            <!-- location -->
+            <p class="p2" class="materials">{{currentArtwork.acf.materials}}</p>
+            <!-- medium -->
+            <p class="p2" class="acknowledgements">{{currentArtwork.acf.acknowledgements}}</p>
+            <!-- loan -->
 
-<div class="extendedContent" *ngIf="showExtended">
-    <img [src]="currentExtended.acf.extended_image.url" [height]="currentExtended.acf.extended_image.height" [width]="currentExtended.acf.extended_image.width">
-    <div [innerHTML]="currentExtended.acf.content"></div>
-</div>
+            <ul>
+                <img class="button1" src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/nextarrow1.png" alt="Next Button!"
+                    width="40" height="40" (click)="hideTombstone=true;"
+                >
+            </ul>
+        </div>
+
+        
+    <div class ="labelContent" *ngIf="hideTombstone==true && currentLabel!=null && showExtended==false">
+        <span *ngIf="currentLabel.acf.firstBody != null">{{currentLabel.acf.firstBody}}</span>
+        <a class="extendedLink" *ngIf="extendedLabel1 != null" (click)="onExtension(extendedLabel1)">{{extendedLabel1.title.rendered}}</a>
+        <span *ngIf="currentLabel.acf.secondBody != null">{{currentLabel.acf.secondBody}}</span>
+        <a class="extendedLink" *ngIf="extendedLabel2!= null" (click)="onExtension(extendedLabel2)">{{extendedLabel2.title.rendered}}</a>
+        <span *ngIf="currentLabel.acf.thirdBody != null">{{currentLabel.acf.thirdBody}}</span>
+        <a class="extendedLink" *ngIf="extendedLabel3 != null" (click)="onExtension(extendedLabel3)">{{extendedLabel3.title.rendered}}</a>
+        <span *ngIf="currentLabel.acf.fourthBody != null">{{currentLabel.acf.fourthBody}}</span>
+        <a class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
+        <span *ngIf="currentLabel.acf.additionalContent != null">{{currentLabel.acf.additionalContent}}</span>
+        <ul>
+            <img class="button2" src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
+            width="40px" height="40px" (click)="hideTombstone=false;"
+            >
+        </ul>
+    </div>
+
+    <div class="extendedLabel" *ngIf="showExtended">
+        <a (click)="showExtended = false;">
+            <img src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/back.png" alt="Close Button!" 
+            width="60px" height="60px"
+            >
+        </a>
+        <div class="extendedContent">
+            <div class="extendedTitle">{{currentExtended.title.rendered}}</div>
+            <img class="image1" [src]="currentExtended.acf.extended_image.url" [height]="currentExtended.acf.extended_image.height" [width]="currentExtended.acf.extended_image.width">
+            <div [innerHTML]="currentExtended.acf.content"></div>
+        </div>
+    </div>
+
+  
+        
+    </div>
+
+    
+    <div class="artwork">
+        <!--Add functionality of displaying image of artwork with label?-->
+    </div>
+
+
+    <div class="arrow" *ngIf="false">
+        <!--
+            toDo: Create arrow that will hide tombstone information and show the main content
+        -->
+    </div>
+
+

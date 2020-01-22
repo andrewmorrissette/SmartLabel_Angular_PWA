@@ -22,7 +22,8 @@ import { WordpressCommentComponent } from './components/wordpress-comment/wordpr
 import {LoginComponent} from './components/login/login.component';
 import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component';
 import { RegisterComponent } from './components/register/register.component';
-import { WordpressNewLabelComponent } from './components/wordpress-new-label/wordpress-new-label.component'
+import { WordpressNewLabelComponent } from './components/wordpress-new-label/wordpress-new-label.component';
+import { LabelSelectComponent } from './label-select/label-select.component'
 
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
@@ -37,7 +38,8 @@ const appRoutes: Routes = [
     {path: 'label',component:WordpressLabelComponent},
     {path: 'label/:id',component:WordpressLabelComponent},
     {path: 'register',component:RegisterComponent},
-    {path: 'newLabel',component:WordpressNewLabelComponent}
+    {path: 'newLabel/:id',component:WordpressNewLabelComponent},
+    {path: 'labelSelect',component:LabelSelectComponent}
     
 ];
 
@@ -53,7 +55,8 @@ const appRoutes: Routes = [
     LoginComponent,
     WordpressLabelComponent,
     RegisterComponent,
-    WordpressNewLabelComponent
+    WordpressNewLabelComponent,
+    LabelSelectComponent
 
   ],
   imports: [

@@ -1,0 +1,3 @@
+<div *ngFor="let label of labels" class="labelDiv">
+    <button mat-raised-button class="labelButton" (click)="selectLabel(label.id)">{{label.title.rendered}}</button>
+</div>

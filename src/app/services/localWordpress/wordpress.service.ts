@@ -1,3 +1,7 @@
+//toDo:
+//Look into each request and see if using ?_filter=parameters will be faster
+//Look at getNewLabels() for an example. Will only return the ID's and the title.
+
 import { Injectable } from '@angular/core';
 import {HttpClient,HttpHeaders} from '@angular/common/http';
 import {Observable, of, forkJoin,interval} from 'rxjs';
@@ -65,8 +69,13 @@ export class LocalWordpressService {
       return this.http.get<selectedLabels>(this.wordpressAPI+"pages?slug=label-select");
     }));
    }
-   getNewLabel():Observable<newLabel>{
-    return this.http.get<newLabel>(this.wordpressAPI+"labels2?id=485");
+   getNewLabel(id:number):Observable<newLabel>{
+    return this.http.get<newLabel>(this.wordpressAPI+"labels2/"+id.toString());
+   }
+   
+   //Will only return the ID & The title (faster)
+   getNewLabels():Observable<newLabel[]>{
+     return this.http.get<newLabel[]>(this.wordpressAPI+"labels2?_filter=id,title");
    }
    getExtendedLabel(id:number):Observable<extendedLabel>{
      return this.http.get<extendedLabel>(this.wordpressAPI+"extended/"+id.toString());
@@ -75,7 +84,7 @@ export class LocalWordpressService {
      return this.http.get<smartLabel>(this.wordpressAPI+"label/"+id.toString());
    }
    getArtworkByArtworkID(id:number):Observable<Artwork>{
-     return this.http.get<Artwork>(this.wordpressAPI+"artwork?id="+id.toString());
+     return this.http.get<Artwork>(this.wordpressAPI+"artwork/"+id.toString());
    }
   getSubCategoriesOfCategoryID(categoryID:Number){
     return this.http.get<Category[]>(this.wordpressAPI+"onDisplay?parent="+categoryID);

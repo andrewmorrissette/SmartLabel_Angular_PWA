@@ -3,6 +3,7 @@ import { newLabel } from 'src/app/models/localWordpressModels/newLabel.model';
 import { Artwork } from 'src/app/models/localWordpressModels/artwork.model';
 import { extendedLabel} from 'src/app/models/localWordpressModels/extendedLabel.model';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+import { ActivatedRoute } from '@angular/router';
 import { TemplateBindingParseResult } from '@angular/compiler';
 import { Url } from 'url';
 
@@ -13,10 +14,11 @@ import { Url } from 'url';
 })
 export class WordpressNewLabelComponent implements OnInit {
 
-  constructor(private wordpressAPI: LocalWordpressService) { }
+  constructor(private wordpressAPI: LocalWordpressService, private _router: ActivatedRoute,) { }
   public currentLabel:newLabel=null;
   public currentArtwork:Artwork=null;
   public currentExtended:extendedLabel=null;
+  public hideTombstone:boolean = false;
   public showExtended:boolean = false;
 
   public extendedLabel1:extendedLabel=null;
@@ -25,43 +27,48 @@ export class WordpressNewLabelComponent implements OnInit {
   public extendedLabel4:extendedLabel=null;
 
   ngOnInit() {
-    this.wordpressAPI.getArtworkByArtworkID(482).subscribe((artwork)=>{
-      console.log("Artwork: ",artwork);
-      if(artwork != null){
-      this.currentArtwork = artwork[0];
-      }
 
-      this.wordpressAPI.getNewLabel().subscribe((label)=>{
+    let labelID:string = this._router.snapshot.paramMap.get("id");
+    console.log("Label ID: ",Number(labelID));
+    if(labelID != null && labelID!=""){
+      this.wordpressAPI.getNewLabel(Number(labelID)).subscribe((label)=>{
         console.log("Label: ", label);
         if(label != null){
-          this.currentLabel = label[0];
-
-          if(this.currentLabel.acf.firstExtended != null){
-            this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.firstExtended).subscribe((extension1)=>{
-              if(extension1!=null){
-                this.extendedLabel1 = extension1;
-                this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.secondExtended).subscribe((extension2)=>{
-                  if(extension2!=null){
-                    this.extendedLabel2 = extension2;
-                    this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.thirdExtended).subscribe((extension3)=>{
-                      if(extension3!=null){
-                        this.extendedLabel3 = extension3;
-                        this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.fourthExtended).subscribe((extension4)=>{
-                          if(extension4!=null){
-                            this.extendedLabel4 = extension4;
-                          }
-                        })
-                      }
-                    })
-                  }
-                })
-              }
-            })
-          }
+          this.currentLabel = label;
+          console.log("Current Label: ",this.currentLabel);
+  
+          this.wordpressAPI.getArtworkByArtworkID(this.currentLabel.acf.artwork[0]).subscribe((artwork)=>{
+            console.log("Artwork: ",artwork);
+            if(artwork != null){
+            this.currentArtwork = artwork;
+            }
+            if(this.currentLabel.acf.firstExtended != null){
+              this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.firstExtended).subscribe((extension1)=>{
+                if(extension1!=null){
+                  this.extendedLabel1 = extension1;
+                  this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.secondExtended).subscribe((extension2)=>{
+                    if(extension2!=null){
+                      this.extendedLabel2 = extension2;
+                      this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.thirdExtended).subscribe((extension3)=>{
+                        if(extension3!=null){
+                          this.extendedLabel3 = extension3;
+                          this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.fourthExtended).subscribe((extension4)=>{
+                            if(extension4!=null){
+                              this.extendedLabel4 = extension4;
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
         }
       });
-    })
-  };
+    };
+  }
 
 onExtension(extension:extendedLabel){
   console.log("Clicked");
