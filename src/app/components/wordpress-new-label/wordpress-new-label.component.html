@@ -39,12 +39,14 @@
         <a class="extendedLink" *ngIf="extendedLabel3 != null" (click)="onExtension(extendedLabel3)">{{extendedLabel3.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.fourthBody != null">{{currentLabel.acf.fourthBody}}</span>
         <a class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
-        <span *ngIf="currentLabel.acf.additionalContent != null">{{currentLabel.acf.additionalContent}}</span>
+        <span *ngIf="currentLabel.acf.fifthBody != null">{{currentLabel.acf.fifthBody}}</span>
+        <span *ngIf="currentLabel.acf.additionalContent != null" [innerHTML]="currentLabel.acf.additionalContent"></span>
         <ul>
             <img class="button2" src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
             width="40px" height="40px" (click)="hideTombstone=false;"
             >
         </ul>
+        <div class ="center" [innerHTML] = "labelVideoHTML"></div>
     </div>
 
     <div class="extendedLabel" *ngIf="showExtended">
@@ -57,6 +59,8 @@
             <div class="extendedTitle">{{currentExtended.title.rendered}}</div>
             <img class="image1" [src]="currentExtended.acf.extended_image.url" [height]="currentExtended.acf.extended_image.height" [width]="currentExtended.acf.extended_image.width">
             <div [innerHTML]="currentExtended.acf.content"></div>
+            <div class ="center" [innerHTML] = "extendedLabelVideoHTML"></div>
+
         </div>
     </div>
 

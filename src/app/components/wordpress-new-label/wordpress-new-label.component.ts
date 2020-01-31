@@ -4,6 +4,7 @@ import { Artwork } from 'src/app/models/localWordpressModels/artwork.model';
 import { extendedLabel} from 'src/app/models/localWordpressModels/extendedLabel.model';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import { TemplateBindingParseResult } from '@angular/compiler';
 import { Url } from 'url';
 
@@ -14,7 +15,7 @@ import { Url } from 'url';
 })
 export class WordpressNewLabelComponent implements OnInit {
 
-  constructor(private wordpressAPI: LocalWordpressService, private _router: ActivatedRoute,) { }
+  constructor(private wordpressAPI: LocalWordpressService, private _router: ActivatedRoute,private sanitizer:DomSanitizer,) { }
   public currentLabel:newLabel=null;
   public currentArtwork:Artwork=null;
   public currentExtended:extendedLabel=null;
@@ -25,6 +26,9 @@ export class WordpressNewLabelComponent implements OnInit {
   public extendedLabel2:extendedLabel=null;
   public extendedLabel3:extendedLabel=null;
   public extendedLabel4:extendedLabel=null;
+
+  public labelVideoHTML: SafeHtml;
+  public extendedLabelVideoHTML: SafeHtml;
 
   ngOnInit() {
 
@@ -41,6 +45,9 @@ export class WordpressNewLabelComponent implements OnInit {
             console.log("Artwork: ",artwork);
             if(artwork != null){
             this.currentArtwork = artwork;
+            }
+            if(this.currentLabel.acf.video_url!= null && this.currentLabel.acf.video_url!= ""){
+              this.labelVideoHTML = this.sanitizeHTML(this.currentLabel.acf.video_url);
             }
             if(this.currentLabel.acf.firstExtended != null){
               this.wordpressAPI.getExtendedLabel(this.currentLabel.acf.firstExtended).subscribe((extension1)=>{
@@ -74,7 +81,15 @@ onExtension(extension:extendedLabel){
   console.log("Clicked");
   console.log(extension);
   this.currentExtended = extension;
+  if(this.currentExtended.acf.video_url!=null && this.currentExtended.acf.video_url!=""){
+    this.extendedLabelVideoHTML = this.sanitizeHTML(this.currentExtended.acf.video_url);
+  }
   this.showExtended = true;
+}
+
+sanitizeHTML(text:string){
+  var temp = this.sanitizer.bypassSecurityTrustHtml(text);
+  return temp;
 }
 
 }

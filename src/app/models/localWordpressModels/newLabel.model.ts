@@ -20,9 +20,11 @@ export interface Acf{
     secondBody?:string,
     thirdBody?:string,
     fourthBody?:string,
+    fifthBody?:string,
     firstExtended?:number,
     secondExtended?:number,
     thirdExtended?:number,
     fourthExtended?:number,
     additionalContent?:string
+    video_url?:string
 }

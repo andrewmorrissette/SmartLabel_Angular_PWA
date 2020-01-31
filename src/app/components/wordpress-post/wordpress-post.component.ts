@@ -88,6 +88,7 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
 
   ngOnInit() {
     let id = this._router.snapshot.paramMap.get('id');
+    this.id =id;
     let parentCategory:string = this._router.snapshot.paramMap.get("category");
     
     
@@ -192,6 +193,7 @@ export class WordpressPostComponent implements OnInit,AfterContentInit {
   }
 
   chatClicked(){
+    console.log("Chat ID: ",this.id);
     this._route.navigate(['/chat/',this.id]);
   }
 

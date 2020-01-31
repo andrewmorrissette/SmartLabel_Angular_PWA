@@ -14,7 +14,7 @@ export interface Title{
 export interface ACF{
     label:any,
     extended_image:Image,
-    video_url:Url,
+    video_url:string,
     content:string,
 }
 

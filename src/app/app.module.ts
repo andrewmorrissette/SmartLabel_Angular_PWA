@@ -66,7 +66,7 @@ const appRoutes: Routes = [
     MyMaterialModule,
     RouterModule.forRoot(
       appRoutes,
-      {enableTracing: true} //<--debugging
+      {enableTracing: true, useHash:true} //<--debugging
     ),
     FormsModule,
     ReactiveFormsModule,
