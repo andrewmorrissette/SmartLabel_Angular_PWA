@@ -23,14 +23,15 @@ import {LoginComponent} from './components/login/login.component';
 import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component';
 import { RegisterComponent } from './components/register/register.component';
 import { WordpressNewLabelComponent } from './components/wordpress-new-label/wordpress-new-label.component';
-import { LabelSelectComponent } from './label-select/label-select.component'
-
+import { LabelSelectComponent } from './label-select/label-select.component';
+import {WordpressHostedChatComponent} from './components/wordpress-hosted-chat/wordpress-hosted-chat.component';
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
     {path: 'demo', component:AppComponent, pathMatch:'full'},
     {path: 'home', component:MuseumShowListComponent, pathMatch:'full'},
     {path: 'home/:category', component:MuseumShowListComponent, pathMatch:'full'},
-    {path: 'chat/:id', component:WordpressChatComponent},
+    //{path: 'chat/:id', component:WordpressChatComponent},
+    {path: 'chat/:id',component:WordpressHostedChatComponent},
     {path: 'wordpress',component:MuseumShowListComponent},
     {path: 'wpExhibit/:id',component:WordpressPostComponent},
     {path: 'wpExhibit/:id/:category',component:WordpressPostComponent},
@@ -39,7 +40,7 @@ const appRoutes: Routes = [
     {path: 'label/:id',component:WordpressLabelComponent},
     {path: 'register',component:RegisterComponent},
     {path: 'newLabel/:id',component:WordpressNewLabelComponent},
-    {path: 'labelSelect',component:LabelSelectComponent}
+    {path: 'labelSelect',component:LabelSelectComponent},
     
 ];
 
@@ -56,7 +57,8 @@ const appRoutes: Routes = [
     WordpressLabelComponent,
     RegisterComponent,
     WordpressNewLabelComponent,
-    LabelSelectComponent
+    LabelSelectComponent,
+    WordpressHostedChatComponent
 
   ],
   imports: [

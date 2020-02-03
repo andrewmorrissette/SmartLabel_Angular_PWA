@@ -86,6 +86,9 @@ export class LocalWordpressService {
    getArtworkByArtworkID(id:number):Observable<Artwork>{
      return this.http.get<Artwork>(this.wordpressAPI+"artwork/"+id.toString());
    }
+   getArtworkTitle(artworkID:Number):Observable<Artwork>{
+    return this.http.get<Artwork>(this.wordpressAPI+"artwork/"+artworkID.toString()+"?_fields=id,title")
+  }
   getSubCategoriesOfCategoryID(categoryID:Number){
     return this.http.get<Category[]>(this.wordpressAPI+"onDisplay?parent="+categoryID);
   }
