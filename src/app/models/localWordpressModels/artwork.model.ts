@@ -1,5 +1,5 @@
 export interface Artwork{
-    ID?:number,
+    id?:number,
     acf?:ACF
 }
 

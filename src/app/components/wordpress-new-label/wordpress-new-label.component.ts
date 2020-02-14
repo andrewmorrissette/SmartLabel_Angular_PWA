@@ -4,6 +4,7 @@ import { Artwork } from 'src/app/models/localWordpressModels/artwork.model';
 import { extendedLabel} from 'src/app/models/localWordpressModels/extendedLabel.model';
 import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
 import { ActivatedRoute } from '@angular/router';
+import { Router,NavigationEnd } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, SafeHtml , SafeUrl} from '@angular/platform-browser';
 import { TemplateBindingParseResult } from '@angular/compiler';
 import { Url } from 'url';
@@ -15,7 +16,7 @@ import { Url } from 'url';
 })
 export class WordpressNewLabelComponent implements OnInit {
 
-  constructor(private wordpressAPI: LocalWordpressService, private _router: ActivatedRoute,private sanitizer:DomSanitizer,) { }
+  constructor(private wordpressAPI: LocalWordpressService, private _router: ActivatedRoute,private sanitizer:DomSanitizer,private _route:Router) { }
   public currentLabel:newLabel=null;
   public currentArtwork:Artwork=null;
   public currentExtended:extendedLabel=null;
@@ -84,7 +85,14 @@ onExtension(extension:extendedLabel){
   if(this.currentExtended.acf.video_url!=null && this.currentExtended.acf.video_url!=""){
     this.extendedLabelVideoHTML = this.sanitizeHTML(this.currentExtended.acf.video_url);
   }
+  else{
+    this.extendedLabelVideoHTML = null;
+  }
   this.showExtended = true;
+}
+goToChat(){
+  console.log("Artwork ID:",this.currentArtwork.id);
+  this._route.navigate(['/chat/',this.currentArtwork.id]);
 }
 
 sanitizeHTML(text:string){

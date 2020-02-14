@@ -23,7 +23,7 @@
             <!-- loan -->
 
             <ul>
-                <img class="button1" src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/nextarrow1.png" alt="Next Button!"
+                <img class="button1" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/nextarrow1.png" alt="Next Button!"
                     width="40" height="40" (click)="hideTombstone=true;"
                 >
             </ul>
@@ -41,17 +41,20 @@
         <a class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.fifthBody != null">{{currentLabel.acf.fifthBody}}</span>
         <span *ngIf="currentLabel.acf.additionalContent != null" [innerHTML]="currentLabel.acf.additionalContent"></span>
+        <div class ="center" [innerHTML] = "labelVideoHTML"></div>
         <ul>
-            <img class="button2" src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
+            <img class="button2" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
             width="40px" height="40px" (click)="hideTombstone=false;"
             >
+            <p class="extendedContent">Have a Question? Chat with visitors and curators <a class="extendedLabel" (click)="goToChat()">HERE.</a></p>
+
         </ul>
-        <div class ="center" [innerHTML] = "labelVideoHTML"></div>
+        
     </div>
 
     <div class="extendedLabel" *ngIf="showExtended">
         <a (click)="showExtended = false;">
-            <img src="http://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/back.png" alt="Close Button!" 
+            <img class="backButton" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/back.png" alt="Close Button!" 
             width="60px" height="60px"
             >
         </a>
@@ -59,10 +62,15 @@
             <div class="extendedTitle">{{currentExtended.title.rendered}}</div>
             <img class="image1" [src]="currentExtended.acf.extended_image.url" [height]="currentExtended.acf.extended_image.height" [width]="currentExtended.acf.extended_image.width">
             <div [innerHTML]="currentExtended.acf.content"></div>
+            <!--Good Width: 540px-->
             <div class ="center" [innerHTML] = "extendedLabelVideoHTML"></div>
+            <p class="extendedContent">Have a Question? Chat with visitors and curators <a class="extendedLabel" (click)="goToChat()">HERE.</a></p>
+
 
         </div>
     </div>
+
+    <!--Link to Chat-->
 
   
         

@@ -25,7 +25,7 @@ export class LocalAuthenticateService {
     const body = new HttpParams()
       .set('username',username)
       .set('password',password)
-    return this.http.post("http://culturalnexus.msu.edu/wordpress/wp-json/jwt-auth/v1/token",body);
+    return this.http.post("https://culturalnexus.msu.edu/wordpress/wp-json/jwt-auth/v1/token",body);
 
    }
 

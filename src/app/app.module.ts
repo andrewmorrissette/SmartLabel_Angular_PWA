@@ -12,6 +12,8 @@ import {HttpClientModule} from '@angular/common/http';
 
 import { SafeURLPipe } from './pipes/safe-url.pipe';
 
+import { CookieService} from 'ngx-cookie-service';
+
 //Wordpress
 import { MuseumShowListComponent } from './components/museum-show-list/museum-show-list.component';
 import { WordpressPostComponent } from './components/wordpress-post/wordpress-post.component';
@@ -23,7 +25,7 @@ import {LoginComponent} from './components/login/login.component';
 import {WordpressLabelComponent} from './components/wordpress-label/wordpress-label.component';
 import { RegisterComponent } from './components/register/register.component';
 import { WordpressNewLabelComponent } from './components/wordpress-new-label/wordpress-new-label.component';
-import { LabelSelectComponent } from './label-select/label-select.component';
+import { LabelSelectComponent } from './components/label-select/label-select.component';
 import {WordpressHostedChatComponent} from './components/wordpress-hosted-chat/wordpress-hosted-chat.component';
 const appRoutes: Routes = [
     {path: '', component: WelcomeScreenComponent, pathMatch: 'full'},
@@ -58,7 +60,8 @@ const appRoutes: Routes = [
     RegisterComponent,
     WordpressNewLabelComponent,
     LabelSelectComponent,
-    WordpressHostedChatComponent
+    WordpressHostedChatComponent,
+    
 
   ],
   imports: [
@@ -80,7 +83,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatListModule,
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

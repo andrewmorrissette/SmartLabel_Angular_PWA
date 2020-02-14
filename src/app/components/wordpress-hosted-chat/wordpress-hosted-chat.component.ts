@@ -1,21 +1,23 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { DomSanitizer} from '@angular/platform-browser';
-import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+import { LocalWordpressService } from '../../services/localWordpress/wordpress.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { map } from 'rxjs/operators';
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-import {Comment} from '../../models/localWordpressModels/comment.model';
-import{Post} from '../../models/localWordpressModels/post.model';
-import {SubscriptionLike} from 'rxjs';
+import { Comment } from '../../models/localWordpressModels/comment.model';
+import { Post } from '../../models/localWordpressModels/post.model';
+import { SubscriptionLike } from 'rxjs';
 //import {AuthenticateService} from '../../services/wordpress/authenticate.service';
-import {LocalAuthenticateService} from '../../services/localWordpress/authenticate.service';
+import { LocalAuthenticateService } from '../../services/localWordpress/authenticate.service';
 import { Artwork } from 'src/app/models/localWordpressModels/artwork.model';
+
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -35,7 +37,8 @@ export class WordpressHostedChatComponent implements OnInit, OnDestroy {
     private _route: Router,
     private _router: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private auth:LocalAuthenticateService
+    private auth:LocalAuthenticateService,
+    private cookieService:CookieService
   ) { }
 
   private currentComments: Comment[]=[];
@@ -53,9 +56,11 @@ export class WordpressHostedChatComponent implements OnInit, OnDestroy {
   private isSpecificPost = false;
 
   ngOnInit() {
-    this.token = this.auth.getToken();
-    console.log("Token from login: ",this.token);
-    if(this.token != null){
+    console.log("Hosted Chat Component");
+    this.token = this.cookieService.get("Auth");
+    //this.token = this.auth.getToken();
+    console.log("Token from Cookie: ",this.token);
+    if(this.token){
       console.log("Setting Token in WordpressAPI");
       this.wordpressAPI.setAuthToken(this.token);
       console.log("Token in API: ",this.wordpressAPI.getAuthToken());

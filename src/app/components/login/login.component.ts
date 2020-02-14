@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {LocalWordpressService} from '../../services/localWordpress/wordpress.service';
-import {LocalAuthenticateService} from '../../services/localWordpress/authenticate.service';
+import { LocalWordpressService} from '../../services/localWordpress/wordpress.service';
+import { LocalAuthenticateService} from '../../services/localWordpress/authenticate.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,9 +11,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder,private wordpressAPI:LocalWordpressService,private auth:LocalAuthenticateService,private _route: Router) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private wordpressAPI:LocalWordpressService,
+    private auth:LocalAuthenticateService,
+    private _route: Router,
+    private cookieService:CookieService) { }
 
   public hasToken:boolean = false;
+  private cookieValue:string;
+  public dayInSeconds = 86400000;
 
   loginForm: FormGroup;
     loading = false;
@@ -51,8 +59,17 @@ export class LoginComponent implements OnInit {
     this.auth.getAuthenticationToken(this.f.username.value,this.f.password.value).subscribe((response)=>{
       console.log("Response",response);
       if(response.token != null && response.token != "" && response.token != undefined){
-        this.auth.setToken(response.token);
-        console.log(this.auth.getToken(),"Token Saved");
+        //Cookie Generation
+        var expiredDate = new Date();
+        expiredDate.setDate(expiredDate.getDate() + 7);
+        console.log("Date added:", expiredDate);
+        this.cookieService.set('Auth',response.token,expiredDate);
+        this.cookieValue = this.cookieService.get('Auth');
+        console.log("Cookie Value",this.cookieValue);
+
+        //this.auth.setToken(response.token);
+        //console.log(this.auth.getToken(),"Token Saved");
+
         this._route.navigate(['/home/']);
 
       }

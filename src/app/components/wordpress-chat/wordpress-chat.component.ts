@@ -52,6 +52,9 @@ export class WordpressChatComponent implements OnInit, OnDestroy {
   private isSpecificPost = false;
 
   ngOnInit() {
+    //THIS IS FOR THE APP CHAT, NOT THE LABEL CHAT THAT USES COOKIES
+    //Discretion is ADVISED
+    console.log("App Chat Component")
     this.token = this.auth.getToken();
     console.log("Token from login: ",this.token);
     if(this.token != null){
