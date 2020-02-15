@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   public hasToken:boolean = false;
   private cookieValue:string;
   public dayInSeconds = 86400000;
+  public errorMessage = "";
 
   loginForm: FormGroup;
     loading = false;
@@ -58,6 +59,7 @@ export class LoginComponent implements OnInit {
     //TODO: Take back to previous chat, but have them stay logged in
     this.auth.getAuthenticationToken(this.f.username.value,this.f.password.value).subscribe((response)=>{
       console.log("Response",response);
+      this.errorMessage="";
       if(response.token != null && response.token != "" && response.token != undefined){
         //Cookie Generation
         var expiredDate = new Date();
@@ -76,6 +78,14 @@ export class LoginComponent implements OnInit {
     },
     (error)=>{
       console.log("Error",error);
+      var errorCode = error.error.code;
+      if(errorCode == "[jwt_auth] invalid_username"){
+        this.errorMessage = "Invalid Username";
+      }
+      if(errorCode == "[jwt_auth] incorrect_password"){
+        this.errorMessage = "The password you entered for the username <strong>" + this.f.username.value + "</strong> is incorrect";
+      }
+      console.log("Error Message: ",this.errorMessage);
     })
   }
 

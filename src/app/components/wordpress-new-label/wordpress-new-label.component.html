@@ -23,7 +23,7 @@
             <!-- loan -->
 
             <ul>
-                <img class="button1" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/nextarrow1.png" alt="Next Button!"
+                <img id= "extended-tombstone" class="button1" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/nextarrow1.png" alt="Next Button!"
                     width="40" height="40" (click)="hideTombstone=true;"
                 >
             </ul>
@@ -32,18 +32,18 @@
         
     <div class ="labelContent" *ngIf="hideTombstone==true && currentLabel!=null && showExtended==false">
         <span *ngIf="currentLabel.acf.firstBody != null">{{currentLabel.acf.firstBody}}</span>
-        <a class="extendedLink" *ngIf="extendedLabel1 != null" (click)="onExtension(extendedLabel1)">{{extendedLabel1.title.rendered}}</a>
+        <a id="extended-info-1" class="extendedLink" *ngIf="extendedLabel1 != null" (click)="onExtension(extendedLabel1)">{{extendedLabel1.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.secondBody != null">{{currentLabel.acf.secondBody}}</span>
-        <a class="extendedLink" *ngIf="extendedLabel2!= null" (click)="onExtension(extendedLabel2)">{{extendedLabel2.title.rendered}}</a>
+        <a id="extended-info-2" class="extendedLink" *ngIf="extendedLabel2!= null" (click)="onExtension(extendedLabel2)">{{extendedLabel2.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.thirdBody != null">{{currentLabel.acf.thirdBody}}</span>
-        <a class="extendedLink" *ngIf="extendedLabel3 != null" (click)="onExtension(extendedLabel3)">{{extendedLabel3.title.rendered}}</a>
+        <a id="extended-info-3" class="extendedLink" *ngIf="extendedLabel3 != null" (click)="onExtension(extendedLabel3)">{{extendedLabel3.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.fourthBody != null">{{currentLabel.acf.fourthBody}}</span>
-        <a class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
+        <a id="extended-info-4" class="extendedLink" *ngIf="extendedLabel4 != null" (click)="onExtension(extendedLabel4)">{{extendedLabel4.title.rendered}}</a>
         <span *ngIf="currentLabel.acf.fifthBody != null">{{currentLabel.acf.fifthBody}}</span>
         <span *ngIf="currentLabel.acf.additionalContent != null" [innerHTML]="currentLabel.acf.additionalContent"></span>
         <div class ="center" [innerHTML] = "labelVideoHTML"></div>
         <ul>
-            <img class="button2" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
+            <img id="extended-tombstone-back" class="button2" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/backarrow1.png" alt="Back Button!"
             width="40px" height="40px" (click)="hideTombstone=false;"
             >
             <p class="extendedContent">Have a Question? Chat with visitors and curators <a class="extendedLabel" (click)="goToChat()">HERE.</a></p>
@@ -54,7 +54,7 @@
 
     <div class="extendedLabel" *ngIf="showExtended">
         <a (click)="showExtended = false;">
-            <img class="backButton" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/back.png" alt="Close Button!" 
+            <img id="extended-info-back" class="backButton" src="https://culturalnexus.msu.edu/wordpress/wp-content/uploads/2020/01/back.png" alt="Close Button!" 
             width="60px" height="60px"
             >
         </a>
@@ -87,5 +87,4 @@
             toDo: Create arrow that will hide tombstone information and show the main content
         -->
     </div>
-
 

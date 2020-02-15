@@ -162,32 +162,5 @@ export class WordpressHostedChatComponent implements OnInit, OnDestroy {
     this.auth.setToken("");
     this.isLoggedIn = false;
   }
-
-  //If trying to get just the code
-  public getCode(url: string): string {
-    console.log("Getting Parameter",name,url);
-    var istoken:boolean=false;
-    var tempString:string="";
-    var token:string = "";
-    for(let char of url){
-      if(char === "?"){
-        istoken=true;
-      }
-      else if(istoken){
-        if(tempString!== "code="){
-          tempString= tempString+char;
-        }
-        else if(tempString === "code="){
-          if(char === "&"){
-            return token;
-          }
-          else{
-            token = token + char;
-          }
-        }
-      }
-    }
-    return null;
-  }
 }
 

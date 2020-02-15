@@ -62,7 +62,7 @@ export class LocalAuthenticateService {
 
   
       
-      return this.http.post("http://culturalnexus.msu.edu/wordpress/wp-json/wp/v2/users/register",headerDict);
+      return this.http.post("https://culturalnexus.msu.edu/wordpress/wp-json/wp/v2/users/register",headerDict);
    }
 }
 

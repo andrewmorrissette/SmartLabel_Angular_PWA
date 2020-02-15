@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   registered:boolean = false;
+  public errorMessage:string = '';
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -43,11 +44,15 @@ export class RegisterComponent implements OnInit {
 
     this.auth.registerUser(this.f.username.value,this.f.email.value,this.f.password.value).subscribe((data)=>{
       if(data.code == "200"){
+        this.errorMessage = '';
         //Add haptic alert that says success
         console.log(data);
         this.registered=true;
         this._route.navigate(['/login/']);
       }
+    },
+    (error)=>{
+      this.errorMessage = error.error.message;
     });
   }
 }

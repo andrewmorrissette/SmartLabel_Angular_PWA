@@ -30,6 +30,7 @@
         <a routerLink="/register" class="btn btn-link">Register</a>
     </div>
 </form>
+<div *ngIf="errorMessage!=''" [innerHTML]="errorMessage"></div>
 
 <div *ngIf="hasToken === true">
   <p class="center">Thank you for logging in</p>
